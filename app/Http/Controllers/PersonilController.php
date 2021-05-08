@@ -23,7 +23,7 @@ class PersonilController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //
         Personil::create([
@@ -83,9 +83,11 @@ class PersonilController extends Controller
      * @param  \App\Models\Personil  $personil
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Personil $personil)
+    public function update(Request $request, $id)
     {
         //
+        Personil::where ('id',$id)->update($request->all());
+        return response()->json('data sudah di update');
     }
 
     /**
@@ -94,8 +96,10 @@ class PersonilController extends Controller
      * @param  \App\Models\Personil  $personil
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Personil $personil)
+    public function destroy($id)
     {
         //
+        Personil::where('id',$id)->delete();
+        return response()->json('data sudah di hapus');
     }
 }

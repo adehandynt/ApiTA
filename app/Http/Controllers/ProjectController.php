@@ -64,10 +64,11 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show(Project $project, $id)
     {
         //
-        return response()->json("ini adalah show $project");
+        $data = Project::where('ProjectID', $id)->get();
+        return response($data);
     }
 
     /**
@@ -91,7 +92,7 @@ class ProjectController extends Controller
     public function update(Request $request, $id)
     {
         //
-        Project::where ('id',$id)->update($request->all());
+        Project::where ('ProjectID',$id)->update($request->all());
         return response()->json('data sudah di update');
 
         
@@ -105,7 +106,7 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        Project::where('id',$id)->delete();
+        Project::where('ProjectID',$id)->delete();
         return response()->json('data sudah di hapus');
         
     }

@@ -78,7 +78,7 @@ class PositionCategoryController extends Controller
     public function update(Request $request, $id)
     {
         //
-        PositionCategory::where ('id',$id)->update($request->all());
+        PositionCategory::where ('ProjectID',$id)->update($request->all());
         return response()->json('data sudah di update');
 
     }

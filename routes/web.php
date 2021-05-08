@@ -20,11 +20,11 @@ $router->get('/', function () use ($router) {
 $router->group( ['prefix'=> 'api'] ,function() use ($router){
 
     //Project
-    $router->get('/DataProject', ['uses'=>'ProjectController@index']);
-    $router->get('/DataProject/{id}', ['uses'=>'ProjectController@show']);
-    $router->post('/DataProject', ['uses'=>'ProjectController@create']);
-    $router->delete('/DataProject/{id}', ['uses'=>'ProjectController@destroy']);
-    $router->put('/DataProject/{id}', ['uses'=>'ProjectController@update']);
+    $router->get('/GetDataProject', ['uses'=>'ProjectController@index']);
+    $router->get('/DataProjectByid/{id}', ['uses'=>'ProjectController@show']);
+    $router->post('/insertDataProject', ['uses'=>'ProjectController@create']);
+    $router->delete('/deleteDataProject/{id}', ['uses'=>'ProjectController@destroy']);
+    $router->post('/UpdateDataProject/{id}', ['uses'=>'ProjectController@update']);
 
     //Bussiness Type
     $router->get('/DataBussinessType', ['uses'=>'BussinessTypeController@index']);
