@@ -38,7 +38,7 @@ class BussinessPartnerController extends Controller
             'Web'               => $request->Web
             ]);
 
-        return response()->json('Data Berhasil Dimasukan');
+            return response()->json(['success' => 'success'], 200);
     }
 
     /**
@@ -59,9 +59,11 @@ class BussinessPartnerController extends Controller
      * @param  \App\Models\BussinessPartner  $bussinessPartner
      * @return \Illuminate\Http\Response
      */
-    public function show(BussinessPartner $bussinessPartner)
+    public function show(Reques $request, $id)
     {
         //
+        $data = BussinessPartner::where('id', $id)->get();
+        return response($data);
     }
 
     /**

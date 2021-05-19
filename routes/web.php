@@ -21,59 +21,59 @@ $router->group( ['prefix'=> 'api'] ,function() use ($router){
 
     //Project
     $router->get('/DataProject', ['uses'=>'ProjectController@index']);
-    $router->get('/DataProject/{id}', ['uses'=>'ProjectController@show']);
-    $router->post('/DataProject', ['uses'=>'ProjectController@create']);
-    $router->delete('/DataProject/{id}', ['uses'=>'ProjectController@destroy']);
-    $router->put('/DataProject/{id}', ['uses'=>'ProjectController@update']);
+    $router->get('/DetailDataProject/{id}', ['uses'=>'ProjectController@show']);
+    $router->post('/InsertDataProject', ['uses'=>'ProjectController@create']);
+    $router->delete('/DeleteDataProject/{id}', ['uses'=>'ProjectController@destroy']);
+    $router->post('/UpdateDataProject/{id}', ['uses'=>'ProjectController@update']);
 
     //Bussiness Type
     $router->get('/DataBussinessType', ['uses'=>'BussinessTypeController@index']);
-    $router->post('/DataBussinessType', ['uses'=>'BussinessTypeController@create']);
-    $router->get('/DataBussinessType/{id}', ['uses'=>'BussinessTypeController@show']);
-    $router->delete('/DataBussinessType/{id}', ['uses'=>'BussinessTypeController@destroy']);
-    $router->put('/DataBussinessType/{id}', ['uses'=>'BussinessTypeController@update']);
+    $router->post('/InsertDataBussinessType', ['uses'=>'BussinessTypeController@create']);
+    $router->get('/DetailDataBussinessType/{id}', ['uses'=>'BussinessTypeController@show']);
+    $router->delete('/DeleteDataBussinessType/{id}', ['uses'=>'BussinessTypeController@destroy']);
+    $router->post('/UpdateDataBussinessType/{id}', ['uses'=>'BussinessTypeController@update']);
 
      //Position
      $router->get('/DataPositon', ['uses'=>'PositionController@index']);
-     $router->post('/DataPositon', ['uses'=>'PositionController@create']);
-     $router->get('/DataPositon/{id}', ['uses'=>'PositionController@show']);
-     $router->delete('/DataPositon/{id}', ['uses'=>'PositionController@destroy']);
-     $router->put('/DataPositon/{id}', ['uses'=>'PositionController@update']);
+     $router->post('/InsertDataPositon', ['uses'=>'PositionController@create']);
+     $router->get('/DetailDataPositon/{id}', ['uses'=>'PositionController@show']);
+     $router->delete('/DeleteDataPositon/{id}', ['uses'=>'PositionController@destroy']);
+     $router->post('/UpdateDataPositon/{id}', ['uses'=>'PositionController@update']);
 
       //Position Category
       $router->get('/DataPositonCategory', ['uses'=>'PositionCategoryController@index']);
-      $router->post('/DataPositonCategory', ['uses'=>'PositionCategoryController@create']);
-      $router->get('/DataPositonCategory/{id}', ['uses'=>'PositionCategoryController@show']);
-      $router->delete('/DataPositonCategory/{id}', ['uses'=>'PositionCategoryController@destroy']);
-      $router->put('/DataPositonCategory/{id}', ['uses'=>'PositionCategoryController@update']);
+      $router->post('/InsertDataPositonCategory', ['uses'=>'PositionCategoryController@create']);
+      $router->get('/DetailDataPositonCategory/{id}', ['uses'=>'PositionCategoryController@show']);
+      $router->delete('/DeleteDataPositonCategory/{id}', ['uses'=>'PositionCategoryController@destroy']);
+      $router->post('/UpdateDataPositonCategory/{id}', ['uses'=>'PositionCategoryController@update']);
 
       //Country
       $router->get('/DataCountry', ['uses'=>'CountryController@index']);
-      $router->post('/DataCountry', ['uses'=>'CountryController@create']);
-      $router->get('/DataCountry/{id}', ['uses'=>'CountryController@show']);
-      $router->delete('/DataCountry/{id}', ['uses'=>'CountryController@destroy']);
-      $router->put('/DataCountry/{id}', ['uses'=>'CountryController@update']);
+      $router->post('/InsertDataCountry', ['uses'=>'CountryController@create']);
+      $router->get('/DetailDataCountry/{id}', ['uses'=>'CountryController@show']);
+      $router->delete('/DeleteDataCountry/{id}', ['uses'=>'CountryController@destroy']);
+      $router->post('/UpdateDataCountry/{id}', ['uses'=>'CountryController@update']);
 
       //City
       $router->get('/DataCity', ['uses'=>'CityController@index']);
-      $router->post('/DataCity', ['uses'=>'CityController@create']);
-      $router->get('/DataCity/{id}', ['uses'=>'CityController@show']);
-      $router->delete('/DataCity/{id}', ['uses'=>'CityController@destroy']);
-      $router->put('/DataCity/{id}', ['uses'=>'CityController@update']);
+      $router->post('/InsertDataCity', ['uses'=>'CityController@create']);
+      $router->get('/DetailDataCity/{id}', ['uses'=>'CityController@show']);
+      $router->delete('/DeleteDataCity/{id}', ['uses'=>'CityController@destroy']);
+      $router->post('/UpdateDataCity/{id}', ['uses'=>'CityController@update']);
 
       //BussinessPartner
       $router->get('/DataBussinessPartner', ['uses'=>'BussinessPartnerController@index']);
-      $router->post('/DataBussinessPartner', ['uses'=>'BussinessPartnerController@create']);
-      $router->get('/DataBussinessPartner/{id}', ['uses'=>'BussinessPartnerController@show']);
-      $router->delete('/DataBussinessPartner/{id}', ['uses'=>'BussinessPartnerController@destroy']);
-      $router->put('/DataBussinessPartner/{id}', ['uses'=>'BussinessPartnerController@update']);
+      $router->post('/InsertDataBussinessPartner', ['uses'=>'BussinessPartnerController@create']);
+      $router->get('/DetailDataBussinessPartner/{id}', ['uses'=>'BussinessPartnerController@show']);
+      $router->delete('/DeleteDataBussinessPartner/{id}', ['uses'=>'BussinessPartnerController@destroy']);
+      $router->post('/UpdateDataBussinessPartner/{id}', ['uses'=>'BussinessPartnerController@update']);
 
       //Personil
       $router->get('/DataPersonil', ['uses'=>'PersonilController@index']);
-      $router->post('/DataPersonil', ['uses'=>'PersonilController@create']);
-      $router->get('/DataPersonil/{id}', ['uses'=>'PersonilController@show']);
-      $router->delete('/DataPersonil/{id}', ['uses'=>'PersonilController@destroy']);
-      $router->put('/DataPersonil/{id}', ['uses'=>'PersonilController@update']);
+      $router->post('/InsertDataPersonil', ['uses'=>'PersonilController@create']);
+      $router->get('/DetailDataPersonil/{id}', ['uses'=>'PersonilController@show']);
+      $router->delete('/DeleteDataPersonil/{id}', ['uses'=>'PersonilController@destroy']);
+      $router->post('/UpdateDataPersonil/{id}', ['uses'=>'PersonilController@update']);
 
 
 

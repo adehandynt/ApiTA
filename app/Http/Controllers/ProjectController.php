@@ -43,7 +43,9 @@ class ProjectController extends Controller
             'CurrencyType'      => $request->CurrencyType
             ]);
 
-        return response()->json('Data Berhasil Dimasukan');
+            //response()->json(['error' => 'invalid'], 401);
+           return response()->json(['success' => 'success'], 200);
+            //return response()->setStatusCode()->json;
 
     }
 
@@ -64,10 +66,11 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show(Request $request, $project)
     {
         //
-        return response()->json("ini adalah show $project");
+        $data = Project::where('id', $project)->get();
+        return response($data);
     }
 
     /**
@@ -92,7 +95,7 @@ class ProjectController extends Controller
     {
         //
         Project::where ('id',$id)->update($request->all());
-        return response()->json('data sudah di update');
+        return response()->json(['success' => 'success'], 200);
 
         
     }
@@ -106,7 +109,7 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         Project::where('id',$id)->delete();
-        return response()->json('data sudah di hapus');
+        return response()->json('Success');
         
     }
 }

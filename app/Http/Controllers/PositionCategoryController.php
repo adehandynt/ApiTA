@@ -30,9 +30,9 @@ class PositionCategoryController extends Controller
             
             'CategoryName'       => $request->CategoryName
             ]);
+        // return response()->json(['error' => 'invalid'], 401);
 
-        return response()->json('Data Berhasil Dimasukan');
-
+        return response()->json(['success' => 'success'], 200);
     }
 
     /**
@@ -52,9 +52,22 @@ class PositionCategoryController extends Controller
      * @param  \App\Models\PositionCategory  $positionCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(PositionCategory $positionCategory)
+    public function show(Request $request, $id)
     {
         //
+        // $data = PositionCategory::whereNotIn('id', $PositionCategory)->get();
+        // return response($data);
+        // return PositionCategory::findOrFail($PositionCategory);
+
+        // $data = PositionCategory::table('position_categories')
+        //    ->whereExists(function ($query) {
+        //        $query->select(PositionCategory::raw(1))
+        //              ->from('position_categories')
+        //              ->whereColumn('id');
+        //    })
+        //    ->get();
+        $data = PositionCategory::where('id', $id)->get();
+           return response($data);
     }
 
     /**
@@ -79,8 +92,7 @@ class PositionCategoryController extends Controller
     {
         //
         PositionCategory::where ('id',$id)->update($request->all());
-        return response()->json('data sudah di update');
-
+        return response()->json(['success' => 'success'], 200);
     }
 
     /**

@@ -31,7 +31,7 @@ class BussinessTypeController extends Controller
             'BussinessTypeName' => $request->BussinessTypeName
             ]);
 
-        return response()->json('Data Berhasil Dimasukan');
+            return response()->json(['success' => 'success'], 200);
     }
 
     /**
@@ -51,10 +51,11 @@ class BussinessTypeController extends Controller
      * @param  \App\Models\BussinessType  $bussinessType
      * @return \Illuminate\Http\Response
      */
-    public function show(BussinessType $bussinessType)
+    public function show(Reques $request, $id)
     {
         //
-        return response()->json("ini adalah show $project");
+        $data = BussinessType::where('id', $id)->get();
+        return response($data);
     }
 
     /**

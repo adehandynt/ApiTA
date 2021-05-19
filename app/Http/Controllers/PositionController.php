@@ -33,7 +33,7 @@ class PositionController extends Controller
             'PositionCatID'      => $request->PositionCatID
             ]);
 
-        return response()->json('Data Berhasil Dimasukan');
+            return response()->json(['success' => 'success'], 200);
     }
 
     /**
@@ -53,9 +53,11 @@ class PositionController extends Controller
      * @param  \App\Models\Position  $position
      * @return \Illuminate\Http\Response
      */
-    public function show(Position $position)
+    public function show(Reques $request, $id)
     {
         //
+        $data = Position::where('id', $id)->get();
+        return response($data);
     }
 
     /**
@@ -80,8 +82,7 @@ class PositionController extends Controller
     {
         //
         Position::where ('id',$id)->update($request->all());
-        return response()->json('data sudah di update');
-
+        return response()->json(['success' => 'success'], 200); 
     }
 
     /**
