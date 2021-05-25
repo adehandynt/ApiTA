@@ -15,8 +15,8 @@ class CreatePositionsTable extends Migration
     {
         Schema::create('Position', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('PostionName');
-            $table->string('Jobdesk');
+            $table->string('PositionName');
+            //$table->string('Jobdesk');
             $table->integer('PositionCatID');
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ class CreatePositionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('positions');
+        Schema::dropIfExists('position');
     }
 }

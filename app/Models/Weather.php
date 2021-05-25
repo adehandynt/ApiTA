@@ -4,11 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class City extends Model
+class Weather extends Model
 {
     //
-    protected $table = 'City';
+    protected $table = 'Weather';
     protected $primarykey='id';
-    protected $fillable = ['CityName','CountryID' ];
-
+    protected $fillable = ['weatherName','symbol'];
 }

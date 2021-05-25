@@ -15,7 +15,12 @@ class PersonilController extends Controller
     public function index()
     {
         //
-        return Personil:: all();
+        return Personil::  join('bussinesspartner', 'bussinesspartner.id', '=', 'personil.BussinessPartnerID')
+        ->join('country','personil.CountryID','=','country.id')
+        ->join('city','personil.CityID','=','city.id')
+        ->join('position','personil.PositionID','=','position.id')
+        ->select('personil.*', 'country.CountryName','city.CityName', 'bussinesspartner.BussinessName','position.PositionName')
+        ->get();
     }
 
     /**
@@ -40,7 +45,7 @@ class PersonilController extends Controller
             'PositionID'               => $request->PositionID
             ]);
 
-        return response()->json('Data Berhasil Dimasukan');
+            return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -60,9 +65,17 @@ class PersonilController extends Controller
      * @param  \App\Models\Personil  $personil
      * @return \Illuminate\Http\Response
      */
-    public function show(Personil $personil)
+    public function show(Personil $personil, $id)
     {
         //
+
+        $data = Personil::where('bussinesspartner.id', $id)->join('bussinesspartner', 'bussinesspartner.id', '=', 'personil.BussinessPartnerID')
+        ->join('country','personil.CountryID','=','country.id')
+        ->join('city','personil.CityID','=','city.id')
+        ->join('position','personil.PositionID','=','position.id')
+        ->select('personil.*', 'country.CountryName','city.CityName', 'bussinesspartner.BussinessName', 'position.PositionName')
+        ->get();
+        return response($data);
     }
 
     /**
@@ -87,7 +100,7 @@ class PersonilController extends Controller
     {
         //
         Personil::where ('id',$id)->update($request->all());
-        return response()->json('data sudah di update');
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -100,6 +113,6 @@ class PersonilController extends Controller
     {
         //
         Personil::where('id',$id)->delete();
-        return response()->json('data sudah di hapus');
+        return response()->json(['status' => 'success'], 200);
     }
 }

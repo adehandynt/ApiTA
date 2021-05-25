@@ -28,10 +28,11 @@ class PositionCategoryController extends Controller
         //
         PositionCategory::create([
             
-            'CategoryName'       => $request->CategoryName
+            'CategoryName'       => $request->CategoryName,
+            'CategoryDesc'       => $request->CategoryDesc
             ]);
 
-        return response()->json('Data Berhasil Dimasukan');
+            return response()->json(['status' => 'success'], 200);
 
     }
 
@@ -52,9 +53,11 @@ class PositionCategoryController extends Controller
      * @param  \App\Models\PositionCategory  $positionCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(PositionCategory $positionCategory)
+    public function show(PositionCategory $positionCategory,$id)
     {
         //
+        $data = PositionCategory::where('id', $id)->get();
+        return response($data);
     }
 
     /**
@@ -79,7 +82,7 @@ class PositionCategoryController extends Controller
     {
         //
         PositionCategory::where ('id',$id)->update($request->all());
-        return response()->json('data sudah di update');
+        return response()->json(['status' => 'success'], 200);
 
     }
 
@@ -93,7 +96,7 @@ class PositionCategoryController extends Controller
     {
         //
         PositionCategory::where('id',$id)->delete();
-        return response()->json('data sudah di hapus');
+        return response()->json(['status' => 'success'], 200);
         
     }
 }

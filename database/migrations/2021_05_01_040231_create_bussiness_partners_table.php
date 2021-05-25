@@ -22,6 +22,8 @@ class CreateBussinessPartnersTable extends Migration
             $table->integer('CityID');
             $table->integer('Phone');
             $table->integer('Fax');
+            $table->integer('MobilePhone');
+            $table->string('Email');
             $table->string('Web');
 
             $table->timestamps();
@@ -35,6 +37,6 @@ class CreateBussinessPartnersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bussiness_partners');
+        Schema::dropIfExists('BussinessPartner');
     }
 }

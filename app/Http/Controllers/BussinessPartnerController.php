@@ -15,7 +15,11 @@ class BussinessPartnerController extends Controller
     public function index()
     {
         //
-        return BussinessPartner:: all();
+        return BussinessPartner::  join('bussiness_types', 'bussinesspartner.BussinessTypeID', '=', 'bussiness_types.id')
+        ->join('country','bussinesspartner.CountryID','=','country.id')
+        ->join('city','bussinesspartner.CityID','=','city.id')
+        ->select('bussinesspartner.*', 'country.CountryName','city.CityName', 'bussiness_types.BussinessTypeName')
+        ->get();
     }
 
     /**
@@ -27,7 +31,7 @@ class BussinessPartnerController extends Controller
     {
         //
         BussinessPartner::create([
-            
+
             'BussinessName'     => $request->BussinessName,
             'BussinessTypeID'   => $request->BussinessTypeID,
             'Address'           => $request->Address,
@@ -35,10 +39,12 @@ class BussinessPartnerController extends Controller
             'CityID'            => $request->CityID,
             'Phone'             => $request->Phone,
             'Fax'               => $request->Fax,
+            'MobilePhone'       => $request->MobilePhone,
+            'Email'             => $request->Email,
             'Web'               => $request->Web
-            ]);
+        ]);
 
-        return response()->json('Data Berhasil Dimasukan');
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -50,7 +56,7 @@ class BussinessPartnerController extends Controller
     public function store(Request $request)
     {
         //
-       
+
     }
 
     /**
@@ -59,9 +65,15 @@ class BussinessPartnerController extends Controller
      * @param  \App\Models\BussinessPartner  $bussinessPartner
      * @return \Illuminate\Http\Response
      */
-    public function show(BussinessPartner $bussinessPartner)
+    public function show(BussinessPartner $bussinessPartner, $id)
     {
         //
+        $data = BussinessPartner::where('bussinesspartner.id', $id)->join('bussiness_types', 'bussinesspartner.BussinessTypeID', '=', 'bussiness_types.id')
+        ->join('country','bussinesspartner.CountryID','=','country.id')
+        ->join('city','bussinesspartner.CityID','=','city.id')
+        ->select('bussinesspartner.*', 'country.CountryName','city.CityName', 'bussiness_types.BussinessTypeName')
+        ->get();
+        return response($data);
     }
 
     /**
@@ -85,8 +97,8 @@ class BussinessPartnerController extends Controller
     public function update(Request $request, $id)
     {
         //
-        BussinessPartner::where ('id',$id)->update($request->all());
-        return response()->json('data sudah di update');
+        BussinessPartner::where('id', $id)->update($request->all());
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -95,10 +107,10 @@ class BussinessPartnerController extends Controller
      * @param  \App\Models\BussinessPartner  $bussinessPartner
      * @return \Illuminate\Http\Response
      */
-    public function destroy( $id)
+    public function destroy($id)
     {
         //
-        BussinessPartner::where('id',$id)->delete();
-        return response()->json('data sudah di hapus');
+        BussinessPartner::where('id', $id)->delete();
+        return response()->json(['status' => 'success'], 200);
     }
 }

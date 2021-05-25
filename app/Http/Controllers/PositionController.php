@@ -15,7 +15,9 @@ class PositionController extends Controller
     public function index()
     {
         //
-        return Position:: all();
+        return Position::  join('positioncategory', 'position.PositionCatID', '=', 'positioncategory.id')
+        ->select('positioncategory.CategoryName', 'position.PositionName','position.PositionCatID', 'position.id')
+        ->get();
     }
 
     /**
@@ -33,7 +35,7 @@ class PositionController extends Controller
             'PositionCatID'      => $request->PositionCatID
             ]);
 
-        return response()->json('Data Berhasil Dimasukan');
+            return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -53,9 +55,13 @@ class PositionController extends Controller
      * @param  \App\Models\Position  $position
      * @return \Illuminate\Http\Response
      */
-    public function show(Position $position)
+    public function show(Position $position, $id)
     {
         //
+        $data = Position::where('position.id', $id)->join('positioncategory', 'position.PositionCatID', '=', 'positioncategory.id')
+        ->select('positioncategory.CategoryName', 'position.PositionName','position.PositionCatID', 'position.id')
+        ->get();
+        return response($data);
     }
 
     /**
@@ -80,7 +86,7 @@ class PositionController extends Controller
     {
         //
         Position::where ('id',$id)->update($request->all());
-        return response()->json('data sudah di update');
+        return response()->json(['status' => 'success'], 200); 
 
     }
 
@@ -94,6 +100,6 @@ class PositionController extends Controller
     {
         //
         Position::where('id',$id)->delete();
-        return response()->json('data sudah di hapus');
+        return response()->json(['status' => 'success'], 200);
     }
 }

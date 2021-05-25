@@ -15,6 +15,9 @@ class CityController extends Controller
     public function index()
     {
         //
+        return City:: join('country', 'city.CountryID', '=', 'country.id')
+        ->select('country.CountryName', 'city.CityName', 'city.id')
+        ->get();
     }
 
     /**
@@ -25,12 +28,12 @@ class CityController extends Controller
     public function create(Request $request)
     {
         //
-        City::create([
+        City::updateOrCreate([
             
             'CityName'      => $request->CityName,
             'CountryID'     => $request->CountryID ]);
 
-        return response()->json('Data Berhasil Dimasukan');
+            return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -50,11 +53,24 @@ class CityController extends Controller
      * @param  \App\Models\City  $city
      * @return \Illuminate\Http\Response
      */
-    public function show(City $city)
+    public function show(City $city,$id)
     {
         //
+        $data = City::where('city.id', $id)->join('country', 'city.CountryID', '=', 'country.id')
+        ->select('city.CountryID','country.CountryName', 'city.CityName', 'city.id')
+        ->get();
+        return response($data);
     }
 
+    public function DataCityByCountryId($id)
+    {
+        //
+        $data = City::where('city.CountryID', $id)->join('country', 'city.CountryID', '=', 'country.id')
+        ->select('city.CountryID','country.CountryName', 'city.CityName', 'city.id')
+        ->get();
+        return response($data);
+    }
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -73,9 +89,11 @@ class CityController extends Controller
      * @param  \App\Models\City  $city
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, City $city)
+    public function update(Request $request, $id)
     {
         //
+        City::where ('id',$id)->update($request->all());
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -84,8 +102,9 @@ class CityController extends Controller
      * @param  \App\Models\City  $city
      * @return \Illuminate\Http\Response
      */
-    public function destroy(City $city)
+    public function destroy($id)
     {
-        //
+        City::where('id',$id)->delete();
+        return response()->json(['status' => 'success'], 200);
     }
 }

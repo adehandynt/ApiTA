@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePositionCategoriesTable extends Migration
+class CreateWeatherTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreatePositionCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('PositionCategory', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('CategoryName');
-            $table->string('CategoryDesc');
-
+        Schema::create('weather', function (Blueprint $table) {
+            $table->id();
+            $table->string('weatherName');
+            $table->string('symbol');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreatePositionCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('PositionCategory');
+        Schema::dropIfExists('weather');
     }
 }

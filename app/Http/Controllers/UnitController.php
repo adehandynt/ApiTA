@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BussinessType;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 
-class BussinessTypeController extends Controller
+class UnitController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class BussinessTypeController extends Controller
     public function index()
     {
         //
-        return BussinessType:: all();
+        return Unit::all();
     }
 
     /**
@@ -26,10 +26,10 @@ class BussinessTypeController extends Controller
     public function create(Request $request)
     {
         //
-
-        BussinessType::create([
-            'BussinessTypeName' => $request->BussinessTypeName
-            ]);
+        Unit::updateOrCreate([
+            
+            'unitName'      => $request->unitName,
+            'unitSymbol'      => $request->unitSymbol]);
 
             return response()->json(['status' => 'success'], 200);
     }
@@ -48,23 +48,23 @@ class BussinessTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\BussinessType  $bussinessType
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function show(BussinessType $bussinessType, $id)
+    public function show(Unit $unit, $id)
     {
         //
-        $data = BussinessType::where('id', $id)->get();
+        $data = Unit::where('id', $id)->get();
         return response($data);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\BussinessType  $bussinessType
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function edit(BussinessType $bussinessType)
+    public function edit(Unit $unit)
     {
         //
     }
@@ -73,26 +73,26 @@ class BussinessTypeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\BussinessType  $bussinessType
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         //
-        BussinessType::where ('id',$id)->update($request->all());
+        Unit::where ('id',$id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\BussinessType  $bussinessType
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         //
-        BussinessType::where('id',$id)->delete();
+        Unit::where('id',$id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
 }

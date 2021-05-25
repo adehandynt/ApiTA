@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\BussinessType;
 use Illuminate\Http\Request;
+use App\Models\Weather;
 
-class BussinessTypeController extends Controller
+class WeatherController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class BussinessTypeController extends Controller
     public function index()
     {
         //
-        return BussinessType:: all();
+        return Weather::all();
     }
 
     /**
@@ -26,10 +26,10 @@ class BussinessTypeController extends Controller
     public function create(Request $request)
     {
         //
-
-        BussinessType::create([
-            'BussinessTypeName' => $request->BussinessTypeName
-            ]);
+        Weather::updateOrCreate([
+            
+            'weatherName'      => $request->weatherName,
+            'symbol'      => $request->symbol]);
 
             return response()->json(['status' => 'success'], 200);
     }
@@ -48,23 +48,23 @@ class BussinessTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\BussinessType  $bussinessType
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function show(BussinessType $bussinessType, $id)
+    public function show(Weather $Weather, $id)
     {
         //
-        $data = BussinessType::where('id', $id)->get();
+        $data = Weather::where('id', $id)->get();
         return response($data);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\BussinessType  $bussinessType
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function edit(BussinessType $bussinessType)
+    public function edit(Weather $unit)
     {
         //
     }
@@ -73,26 +73,26 @@ class BussinessTypeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\BussinessType  $bussinessType
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         //
-        BussinessType::where ('id',$id)->update($request->all());
+        Weather::where ('id',$id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\BussinessType  $bussinessType
+     * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         //
-        BussinessType::where('id',$id)->delete();
+        Weather::where('id',$id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
 }

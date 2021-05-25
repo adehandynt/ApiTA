@@ -26,11 +26,11 @@ class CountryController extends Controller
     public function create(Request $request)
     {
         //
-        Country::create([
+        Country::updateOrCreate([
             
             'CountryName'      => $request->CountryName]);
 
-        return response()->json('Data Berhasil Dimasukan');
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -50,9 +50,22 @@ class CountryController extends Controller
      * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
-    public function show(Country $country)
+    public function show(Country $country, $id)
     {
         //
+            $data = Country::where('id', $id)->get();
+        return response($data);
+       
+        
+    }
+
+    public function showLastInput(Country $country)
+    {
+        //
+        
+            return Country:: orderBy('id','desc')->take(1)->get();
+        
+        
     }
 
     /**
@@ -73,9 +86,11 @@ class CountryController extends Controller
      * @param  \App\Models\Country  $country
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Country $country)
+    public function update(Request $request, $id)
     {
         //
+        Country::where ('id',$id)->update($request->all());
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -88,6 +103,6 @@ class CountryController extends Controller
     {
         //
         Country::where('id',$id)->delete();
-        return response()->json('data sudah di hapus');
+        return response()->json(['status' => 'success'], 200);
     }
 }

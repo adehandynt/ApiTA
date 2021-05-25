@@ -15,8 +15,9 @@ class CreateCurrenciesTable extends Migration
     {
         Schema::create('Currency', function (Blueprint $table) {
             $table->id('id');
-            $table->integer('CountryID'); 
-
+            $table->integer('CountryID')->unsigned();
+            $table->foreign('CountryID')->references('id')->on('Country'); 
+            $table->string('CurrencyName');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateCurrenciesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists('currency');
     }
 }
