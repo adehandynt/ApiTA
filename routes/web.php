@@ -91,9 +91,34 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('/DeleteDataUnit/{id}', ['uses' => 'UnitController@destroy']);
     $router->post('/UpdateUnit/{id}', ['uses' => 'UnitController@update']);
 
+    //weather
     $router->get('/DataWeather', ['uses' => 'WeatherController@index']);
     $router->post('/InsertDataWeather', ['uses' => 'WeatherController@create']);
     $router->get('/DataWeatherByid/{id}', ['uses' => 'WeatherController@show']);
     $router->delete('/DeleteDataWeather/{id}', ['uses' => 'WeatherController@destroy']);
     $router->post('/UpdateWeather/{id}', ['uses' => 'WeatherController@update']);
+
+    //PrivilegedName
+    $router->get('/DataPrivilegedName', ['uses' => 'PrivilegedNameController@index']);
+    $router->post('/InsertDataPrivilegedName', ['uses' => 'PrivilegedNameController@create']);
+    $router->get('/DataPrivilegedNameByid/{id}', ['uses' => 'PrivilegedNameController@show']);
+    $router->delete('/DeleteDataPrivilegedName/{id}', ['uses' => 'PrivilegedNameController@destroy']);
+    $router->post('/UpdatePrivilegedName/{id}', ['uses' => 'PrivilegedNameController@update']);
+
+    //Privileged
+    $router->get('/DataPrivileged', ['uses' => 'UserPrivilegedController@index']);
+    $router->post('/InsertDataPrivileged', ['uses' => 'UserPrivilegedController@create']);
+    $router->get('/DataPrivilegedByid/{id}', ['uses' => 'UserPrivilegedController@show']);
+    $router->get('/DataSpecPrivilegedByid/{id}', ['uses' => 'UserPrivilegedController@SpecPrivilegedByid']);
+    $router->delete('/DeleteDataPrivileged/{id}', ['uses' => 'UserPrivilegedController@destroy']);
+    $router->post('/UpdatePrivileged/{id}', ['uses' => 'UserPrivilegedController@update']);
+
+     //user
+     $router->get('/DataUser', ['uses' => 'UserController@index']);
+     $router->post('/InsertDataUser', ['uses' => 'UserController@create']);
+     $router->get('/DataUserByid/{id}', ['uses' => 'UserController@show']);
+     $router->get('/DataUserPrivilegedByid/{id}', ['uses' => 'UserController@UserPrivilegedByid']);
+     $router->delete('/DeleteDataUser/{id}', ['uses' => 'UserController@destroy']);
+     $router->post('/UpdateUser/{id}', ['uses' => 'UserController@update']);
+
 });
