@@ -20,7 +20,9 @@ class UserTable extends Migration
             $table->string('UserLogin');
             $table->string('UserMail');
             $table->bigInteger('UserProfile')->unsigned();
-            $table->foreign('UserProfile')->references('id')->on('UserPrivileged');
+            $table->foreign('UserProfile')->references('id')->on('UserPrivileged')->constrained()
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->integer('PrivilegedStatus');
             $table->string('password');
             $table->timestamps();

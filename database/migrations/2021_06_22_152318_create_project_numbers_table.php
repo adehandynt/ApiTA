@@ -17,9 +17,13 @@ class CreateProjectNumbersTable extends Migration
             $table->id();
             $table->integer('ContractNumber');
             $table->integer('ProjectID')->unsigned();
-           
-            $table->integer('BusinessPartnerID')->unsigned();
-           
+            $table->foreign('ProjectID')->references('ProjectID')->on('Projects')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->bigInteger('BusinessPartnerID')->unsigned();
+            $table->foreign('BusinessPartnerID')->references('id')->on('BussinessPartner')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->date('StartDate');
             $table->date('EndDate');
             $table->integer('TotalAmount');

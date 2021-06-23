@@ -17,7 +17,11 @@ class CreateRiskManagementTable extends Migration
             $table->id();
             $table->string('DescriptionRisk');
             $table->integer('ProjectID')->unsigned();
-            $table->integer('PersonilID')->unsigned();
+            $table->bigInteger('PersonilID')->unsigned();
+            $table->foreign('ProjectID')->references('ProjectID')->on('Projects')->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreign('PersonilID')->references('id')->on('personil')->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->string('Rank');
             $table->date('DueDateRisk');
             $table->string('Mitigation');

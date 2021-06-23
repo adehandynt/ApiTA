@@ -18,9 +18,12 @@ class CreateContractorEquipmentTable extends Migration
             $table->id();
             $table->string('EquipmentName');
             $table->integer('ProjectID')->unsigned();
-            $table->integer('BusinessPartnerID')->unsigned();
+            $table->bigInteger('BusinessPartnerID')->unsigned();
             $table->integer('UnitID')->unsigned();
-          
+            $table->foreign('ProjectID')->references('ProjectID')->on('Projects')->onUpdate('cascade')
+            ->onDelete('cascade');
+            $table->foreign('BusinessPartnerID')->references('id')->on('bussinesspartner')->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->date('MobilizationDate');
             $table->date('DemobilizationDate');
            
