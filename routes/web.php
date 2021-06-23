@@ -32,6 +32,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataBussinessTypeByid/{id}', ['uses' => 'BussinessTypeController@show']);
     $router->delete('/DeleteDataBussinessType/{id}', ['uses' => 'BussinessTypeController@destroy']);
     $router->post('/UpdateDataBussinessType/{id}', ['uses' => 'BussinessTypeController@update']);
+    $router->get('/DataBussinessTypeby/{type}', ['uses' => 'BussinessTypeController@bytype']);
 
     //Country
     $router->get('/DataCountry', ['uses' => 'CountryController@index']);
@@ -47,6 +48,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataPositionByid/{id}', ['uses' => 'PositionController@show']);
     $router->delete('/DeleteDataPosition/{id}', ['uses' => 'PositionController@destroy']);
     $router->post('/UpdatePosition/{id}', ['uses' => 'PositionController@update']);
+    $router->get('/DataPositionbyPersonil/{PersonilID}', ['uses' => 'PositionController@PositionbyPersonil']);
+
 
     //Position Category
     $router->get('/DataPositionCategory', ['uses' => 'PositionCategoryController@index']);
@@ -69,6 +72,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataBusinessPartnerByid/{id}', ['uses' => 'BussinessPartnerController@show']);
     $router->delete('/DeleteDataBusinessPartner/{id}', ['uses' => 'BussinessPartnerController@destroy']);
     $router->post('/UpdateDataBusinessPartner/{id}', ['uses' => 'BussinessPartnerController@update']);
+    $router->get('/DataBusinessPartnerByType/{type}', ['uses' => 'BussinessPartnerController@Partnerbytype']);
+
 
     //Personil
     $router->get('/DataPersonil', ['uses' => 'PersonilController@index']);
@@ -76,6 +81,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataPersonilByid/{id}', ['uses' => 'PersonilController@show']);
     $router->delete('/DeleteDataPersonil/{id}', ['uses' => 'PersonilController@destroy']);
     $router->post('/UpdateDataPersonil/{id}', ['uses' => 'PersonilController@update']);
+    $router->get('/DataPersonilbyPosition/{PositionID}', ['uses' => 'PersonilController@PersonilbyPosition']);
+    $router->get('/DataPersonilbyPartner/{BussinessPartnerID}', ['uses' => 'PersonilController@PersonilbyPartner']);
 
     //currency
     $router->get('/DataCurrency', ['uses' => 'CurrencyController@index']);
@@ -120,5 +127,23 @@ $router->group(['prefix' => 'api'], function () use ($router) {
      $router->get('/DataUserPrivilegedByid/{id}', ['uses' => 'UserController@UserPrivilegedByid']);
      $router->delete('/DeleteDataUser/{id}', ['uses' => 'UserController@destroy']);
      $router->post('/UpdateUser/{id}', ['uses' => 'UserController@update']);
+    //Project Number
+    $router->get('/DataProjectNumber', ['uses' => 'ProjectNumberController@index']);
+    $router->post('/InsertProjectNumber', ['uses' => 'ProjectNumberController@create']);
+
+    //Contractor Equipment 
+    $router->get('/DataContractorEquipment', ['uses' => 'ContractorEquipmentController@index']);
+    $router->post('/InsertContractorEquipment', ['uses' => 'ContractorEquipmentController@create']);
+    $router->delete('/DeleteContractorEquipment/{id}', ['uses' => 'ContractorEquipmentController@destroy']);
+    $router->post('/UpdateContractorEquipment/{id}', ['uses' => 'ContractorEquipmentController@update']);
+    $router->get('/DataContractorEquipmentByid/{id}', ['uses' => 'ContractorEquipmentController@show']);
+
+
+    //Risk Management
+    $router->get('/DataRiskManagement', ['uses' => 'RiskManagementController@index']);
+    $router->post('/InsertRiskManagement', ['uses' => 'RiskManagementController@create']);
+    $router->delete('/DeleteRiskManagement/{id}', ['uses' => 'RiskManagementController@destroy']);
+    $router->post('/UpdateRiskManagement/{id}', ['uses' => 'RiskManagementController@update']);
+    $router->get('/DataRiskManagementByid/{id}', ['uses' => 'RiskManagementController@show']);
 
 });
