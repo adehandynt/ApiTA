@@ -115,4 +115,20 @@ class PersonilController extends Controller
         Personil::where('id',$id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
+
+    public function PersonilbyPosition($PositionID)
+    {
+        //
+        $data =  Personil::where('PositionID', $PositionID)->get();
+        return response($data);
+    }
+
+    public function PersonilbyPartner($BussinessPartnerID)
+    {
+        //
+        $data =  Personil::where('BussinessPartnerID', $BussinessPartnerID)->get();
+        return response($data);
+
+        
+    }
 }

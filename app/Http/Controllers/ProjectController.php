@@ -43,9 +43,9 @@ class ProjectController extends Controller
             'CurrencyType'      => $request->CurrencyType
             ]);
 
-         //response()->json(['error' => 'invalid'], 401);
+         
          return response()->json(['status' => 'success'], 200);
-         //return response()->setStatusCode()->json;
+         
 
     }
 

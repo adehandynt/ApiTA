@@ -102,4 +102,13 @@ class PositionController extends Controller
         Position::where('id',$id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
+
+    public function PositionbyPersonil($PersonilID)
+    {
+        //
+        $data =  Position::where('id', $PersonilID)->get();
+        return response($data);
+
+        
+    }
 }

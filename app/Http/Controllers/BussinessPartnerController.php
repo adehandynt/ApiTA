@@ -113,4 +113,6 @@ class BussinessPartnerController extends Controller
         BussinessPartner::where('id', $id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
+    
+    
 }

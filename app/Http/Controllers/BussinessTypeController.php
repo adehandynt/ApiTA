@@ -95,4 +95,13 @@ class BussinessTypeController extends Controller
         BussinessType::where('id',$id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
+
+    public function bytype($type)
+    {
+        //
+        $data = BussinessType::where('BussinessTypeName', $type)
+        ->join('bussinesspartner', 'bussiness_types.id', '=','bussinesspartner.BussinessTypeID')
+        ->get();
+        return response($data);
+    }
 }
