@@ -100,6 +100,27 @@ class ProjectController extends Controller
         
     }
 
+    public function updateSetDefault(Request $request, $id)
+    {
+        //
+        Project::where ('setDefault','1')->update(array('setDefault'=>'0'));
+        Project::where ('ProjectID',$id)->update(array('setDefault'=>'1'));
+        return response()->json(['status' => 'success'], 200);
+
+        
+    }
+
+    public function GetProjectsetDefault(Request $request)
+    {
+        //
+        $data = Project::where('SetDefault','1')
+        ->select('ProjectID')
+        ->get();
+        return response($data);
+
+        
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -109,7 +130,7 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         Project::where('ProjectID',$id)->delete();
-        return response()->json(['status' => 'success'], 200);
+        response()->json(['status' => 'success'], 200);
         
     }
 }

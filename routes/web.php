@@ -25,6 +25,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/InsertDataProject', ['uses' => 'ProjectController@create']);
     $router->delete('/DeleteDataProject/{id}', ['uses' => 'ProjectController@destroy']);
     $router->post('/UpdateDataProject/{id}', ['uses' => 'ProjectController@update']);
+    $router->post('/UpdateDataProjectSetDefault/{id}', ['uses' => 'ProjectController@updateSetDefault']);
+    $router->get('/GetDataProjectSetDefault', ['uses' => 'ProjectController@GetProjectsetDefault']);
 
     //Bussiness Type
     $router->get('/DataBussinessType', ['uses' => 'BussinessTypeController@index']);
