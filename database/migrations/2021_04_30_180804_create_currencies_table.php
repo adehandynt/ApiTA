@@ -16,7 +16,9 @@ class CreateCurrenciesTable extends Migration
         Schema::create('Currency', function (Blueprint $table) {
             $table->id('id');
             $table->integer('CountryID')->unsigned();
-            $table->foreign('CountryID')->references('id')->on('Country'); 
+            $table->foreign('CountryID')->references('id')->on('Country')->constrained()
+            ->onUpdate('cascade')
+            ->onDelete('cascade');; 
             $table->string('CurrencyName');
             $table->timestamps();
         });

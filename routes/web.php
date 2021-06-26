@@ -146,4 +146,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/UpdateRiskManagement/{id}', ['uses' => 'RiskManagementController@update']);
     $router->get('/DataRiskManagementByid/{id}', ['uses' => 'RiskManagementController@show']);
 
+    //BaselineBOQ
+    $router->get('/DataBoq', ['uses' => 'BaselineBoqController@index']);
+    $router->post('/InsertDataBoq', ['uses' => 'BaselineBoqController@create']);
+    $router->get('/DataBoqByid/{id}', ['uses' => 'BaselineBoqController@show']);
+    $router->delete('/DeleteBoq/{id}', ['uses' => 'BaselineBoqController@destroy']);
+    $router->post('/UpdateBoq/{id}', ['uses' => 'BaselineBoqController@update']);
+
 });
