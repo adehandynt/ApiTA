@@ -154,5 +154,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataBoqByid/{id}', ['uses' => 'BaselineBoqController@show']);
     $router->delete('/DeleteBoq/{id}', ['uses' => 'BaselineBoqController@destroy']);
     $router->post('/UpdateBoq/{id}', ['uses' => 'BaselineBoqController@update']);
+    $router->get('/DataBoqchild/{id}', ['uses' => 'BaselineBoqController@DataBoqchild']);
 
 });

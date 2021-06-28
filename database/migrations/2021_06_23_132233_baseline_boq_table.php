@@ -18,7 +18,7 @@ class BaselineBoqTable extends Migration
             $table->id();
             $table->string('itemName');
             $table->string('parentItem')->nullable();
-            $table->string('hasChild')->nullable();
+            $table->text('hasChild')->nullable();
             $table->integer('qty')->nullable();
             $table->integer('price')->nullable();
             $table->integer('amount')->nullable();

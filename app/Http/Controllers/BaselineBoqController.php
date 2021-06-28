@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Illuminate\Http\Request;
 use App\Models\BaselineBoq;
 
@@ -15,10 +16,12 @@ class BaselineBoqController extends Controller
     public function index()
     {
         //
-         return BaselineBoq::leftjoin('unit', 'baselineboq.unitID', '=', 'unit.id')
-        ->leftjoin('currency', 'baselineboq.CurrencyID', '=', 'currency.id')
-        ->select('baselineboq.*','currency.currencyName','unit.UnitName')
-        ->get();
+         //return  DB::select('SELECT * FROM baselineboq ORDER BY COALESCE(parentItem, id), id');
+         return  DB::select('SELECT a.*,c.UnitName,d.currencyName
+         FROM baselineboq a
+         left JOIN unit c on c.id=a.unitID
+         left JOIN currency d on d.id = a.CurrencyID
+         ORDER BY COALESCE(a.parentItem, a.id), a.id');
     }
 
     /**
@@ -29,7 +32,7 @@ class BaselineBoqController extends Controller
     public function create(Request $request)
     {
         //
-        BaselineBoq::updateOrCreate([
+        $data = BaselineBoq::updateOrCreate([
             
             'itemName'      => $request->itemName,
             'parentItem'      => $request->parentItem,
@@ -44,7 +47,7 @@ class BaselineBoqController extends Controller
 
             ]);
 
-            return response()->json(['status' => 'success'], 200);
+            return response()->json(['status' => 'success','last_insert_id' => $data->id], 200);
     }
 
     /**
@@ -64,11 +67,20 @@ class BaselineBoqController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function show(BaselineBoq $unit, $id)
+    public function show(BaselineBoq $BaselineBoq, $id)
     {
         //
         $data = BaselineBoq::where('id', $id)->get();
         return response($data);
+    }
+
+    public function DataBoqchild(BaselineBoq $BaselineBoq, $id){
+        return  DB::select('SELECT a.*,c.UnitName,d.currencyName
+         FROM baselineboq a
+         left JOIN unit c on c.id=a.unitID
+         left JOIN currency d on d.id = a.CurrencyID
+         where a.parentItem = ?
+         ORDER BY COALESCE(a.parentItem, a.id), a.id', [$id]);
     }
 
     /**
@@ -77,7 +89,7 @@ class BaselineBoqController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function edit(BaselineBoq $unit)
+    public function edit(BaselineBoq $BaselineBoq)
     {
         //
     }

@@ -24,6 +24,7 @@ class CreateProjectsTable extends Migration
             $table->date('CommencementDate');
             $table->date('CompletionDate');
             $table->integer('ProjectDuration');
+            $table->integer('setDefault')->default('0');
             $table->string('CurrencyType');
 
             $table->timestamps();

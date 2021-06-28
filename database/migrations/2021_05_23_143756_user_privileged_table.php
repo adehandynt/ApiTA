@@ -18,7 +18,8 @@ class UserPrivilegedTable extends Migration
             $table->id();
             $table->string('UserPrivileged');
             $table->bigInteger('PrivilegedNameID')->unsigned();
-            $table->foreign('PrivilegedNameID')->references('id')->on('PrivilegedName');
+            $table->foreign('PrivilegedNameID')->references('id')->on('PrivilegedName')->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->integer('status')->unsigned();
             $table->timestamps();
         });
