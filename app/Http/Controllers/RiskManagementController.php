@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RiskManagement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class RiskManagementController extends Controller
 {
@@ -91,7 +92,16 @@ class RiskManagementController extends Controller
     public function update(Request $request, $id)
     {
         //
-        RiskManagement::where('id', $id)->update($request->all());
+        // RiskManagement::where('id', $id)->update($request->all());
+        RiskManagement::where('id', $id)->update([
+            'DescriptionRisk' => \request('DescriptionRisk'),
+            'ProjectID' => \request('ProjectID'),
+            'PersonilID' => \request('PersonilID'),
+            'Rank' => \request('Rank'),
+            'DueDateRisk' => \request('DueDateRisk'),
+            'Mitigation' => \request('Mitigation')
+        ]);
+       
         return response()->json(['status' => 'success'], 200);
     }
 
