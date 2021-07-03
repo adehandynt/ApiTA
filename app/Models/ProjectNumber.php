@@ -8,6 +8,6 @@ class ProjectNumber extends Model
 {
     //
     protected $primarykey='id';
-    protected $fillable = ['ContractNumber', 'ProjectID', 'BusinessPartnerID', 'StartDate', 
+    protected $fillable = ['ContractNumber', 'ProjectID', 'BusinessPartnerID','PositionID', 'StartDate', 
     'EndDate', 'TotalAmount', 'ScopeOfWork'];
 }

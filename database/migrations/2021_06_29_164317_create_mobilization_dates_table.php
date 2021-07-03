@@ -15,7 +15,20 @@ class CreateMobilizationDatesTable extends Migration
     {
         Schema::create('mobilization_dates', function (Blueprint $table) {
             $table->id();
+            $table->integer('CurrentManMonth');
+            $table->integer('Schedule');
+            $table->integer('ProjectID')->unsigned();
+            $table->integer('BusinessPartnerID')->unsigned();
+            $table->integer('PersonilID')->unsigned();
+            $table->integer('PositionCatID')->unsigned();
+            $table->integer('PositionID')->unsigned();
+            $table->date('StarDateMobilization');
+            $table->date('EndDateMobilization');
+
+            
+            
             $table->timestamps();
+
         });
     }
 
