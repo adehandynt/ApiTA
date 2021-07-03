@@ -4,29 +4,16 @@ namespace App\Http\Controllers;
 
 use DB;
 use Illuminate\Http\Request;
-use App\Models\BaselineBoq;
+use App\Models\HistoryBoq;
 
-class BaselineBoqController extends Controller
+class HistoryBoqController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    //
     public function index()
     {
         //
          //return  DB::select('SELECT * FROM baselineboq ORDER BY COALESCE(parentItem, id), id');
-         return  DB::select('SELECT a.*,c.UnitName,d.currencyName
-         FROM baselineboq a
-         left JOIN unit c on c.id=a.unitID
-         left JOIN currency d on d.id = a.CurrencyID
-         where a.hasChild IS NOT NULL and a.hasChild != 0
-         ORDER BY COALESCE(a.parentItem, a.id), a.id');
-    }
-    public function getAllBoq()
-    {
-    return  BaselineBoq::all();
+         return  DB::select('SELECT a.*, count(id)as total_item FROM history_boq a where a.parentItem IS NULL and (a.hasChild IS NOT NULL and a.hasChild != 0)  GROUP by created_at,Created_By');
     }
 
     /**
@@ -37,8 +24,8 @@ class BaselineBoqController extends Controller
     public function create(Request $request)
     {
         //
-        $data = BaselineBoq::updateOrCreate([
-            
+        $data = HistoryBoq::Create([
+            'boqID' => $request->boqID,
             'itemName'      => $request->itemName,
             'parentItem'      => $request->parentItem,
             'hasChild'      => $request->hasChild,
@@ -74,7 +61,7 @@ class BaselineBoqController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function show(BaselineBoq $BaselineBoq, $id)
+    public function show(HistoryBoq $HistoryBoq, $id)
     {
         //
         return DB::select('SELECT a.*,c.UnitName,d.currencyName
@@ -84,13 +71,41 @@ class BaselineBoqController extends Controller
         where a.id=?',[$id]);
     }
 
-    public function DataBoqchild(BaselineBoq $BaselineBoq, $id){
-        return  DB::select('SELECT a.*,c.UnitName,d.currencyName
-         FROM baselineboq a
+    public function DataBoqByidHistory(HistoryBoq $HistoryBoq, $ProjectID, $contractorID, $created_at, $time_at)
+    {
+        //
+        $created_at=$created_at.' '.$time_at;
+        // return DB::select('SELECT a.*,c.UnitName,d.currencyName
+        // FROM history_boq a
+        // left JOIN unit c on c.id=a.unitID
+        // left JOIN currency d on d.id = a.CurrencyID
+        // where a.ProjectID=? and a.contractorID = ? and a.created_at like ?',[$ProjectID, $contractorID, $created_at]);
+
+        return DB::select('SELECT a.*,c.UnitName,d.currencyName
+         FROM history_boq a
+         left JOIN unit c on c.id=a.unitID
+         left JOIN currency d on d.id = a.CurrencyID
+         where (a.hasChild IS NOT NULL and a.hasChild != 0)
+       and a.ProjectID IS NULL and a.contractorID IS NULL and a.created_at like ? 
+        ORDER BY COALESCE(a.parentItem, a.boqID), a.boqID',[$created_at]);
+    }
+
+    public function DataBoqchild(HistoryBoq $HistoryBoq, $id){
+        return DB::select('SELECT a.*,c.UnitName,d.currencyName
+         FROM history_boq a
          left JOIN unit c on c.id=a.unitID
          left JOIN currency d on d.id = a.CurrencyID
          where a.parentItem = ? and (a.hasChild IS NULL or a.hasChild = 0)
          ORDER BY COALESCE(a.parentItem, a.id), a.id', [$id]);
+    }
+
+    public function DataBoqchildHistory (HistoryBoq $HistoryBoq, $id){
+        return  DB::select('SELECT a.*,c.UnitName,d.currencyName
+         FROM history_boq a
+         left JOIN unit c on c.id=a.unitID
+         left JOIN currency d on d.id = a.CurrencyID
+         where a.parentItem = ? and (a.hasChild IS NULL or a.hasChild = 0)
+         ORDER BY COALESCE(a.parentItem, a.boqID), a.boqID', [$id]);
     }
 
     /**
@@ -99,7 +114,7 @@ class BaselineBoqController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function edit(BaselineBoq $BaselineBoq)
+    public function edit(HistoryBoq $HistoryBoq)
     {
         //
     }
@@ -114,7 +129,7 @@ class BaselineBoqController extends Controller
     public function update(Request $request, $id)
     {
         //
-        BaselineBoq::where ('id',$id)->update($request->all());
+        HistoryBoq::where ('id',$id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -127,15 +142,7 @@ class BaselineBoqController extends Controller
     public function destroy($id)
     {
         //
-        BaselineBoq::where('id',$id)->delete();
-        DB::delete('DELETE
-         FROM baselineboq
-         WHERE parentItem IN
-         (
-             SELECT parentItem
-             FROM baselineboq
-             WHERE parentItem = ?
-         )',[$id]);
+        HistoryBoq::where('id',$id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
 }

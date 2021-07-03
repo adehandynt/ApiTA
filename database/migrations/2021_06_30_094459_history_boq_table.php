@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class BaselineBoqTable extends Migration
+class HistoryBoqTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,9 @@ class BaselineBoqTable extends Migration
     public function up()
     {
         //
-        Schema::create('BaselineBoq', function (Blueprint $table) {
+        Schema::create('history_boq', function (Blueprint $table) {
             $table->id();
+            $table->integer('boqID');
             $table->string('itemName');
             $table->string('parentItem')->nullable();
             $table->text('hasChild')->nullable();
@@ -56,7 +57,7 @@ class BaselineBoqTable extends Migration
             ->onUpdate('cascade')
             ->onDelete('cascade');
             $table->timestamps();
-
+            
             $table->integer('Created_By');
         });
     }
@@ -69,6 +70,6 @@ class BaselineBoqTable extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('BaselineBoq');
+        Schema::dropIfExists('history_boq');
     }
 }

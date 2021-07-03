@@ -155,5 +155,13 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('/DeleteBoq/{id}', ['uses' => 'BaselineBoqController@destroy']);
     $router->post('/UpdateBoq/{id}', ['uses' => 'BaselineBoqController@update']);
     $router->get('/DataBoqchild/{id}', ['uses' => 'BaselineBoqController@DataBoqchild']);
+    $router->get('/getAllBoq', ['uses' => 'BaselineBoqController@getAllBoq']);
+
+    $router->get('/DataBoqHistory', ['uses' => 'HistoryBoqController@index']);
+    $router->post('/InsertDataBoqHistory', ['uses' => 'HistoryBoqController@create']);
+    $router->get('/DataBoqByidHistory/{ProjectID}/{contractorID}/{created_at}/{time_at}', ['uses' => 'HistoryBoqController@DataBoqByidHistory']);
+    $router->delete('/DeleteBoqHistory/{id}', ['uses' => 'HistoryBoqController@destroy']);
+    $router->post('/UpdateBoqHistory/{id}', ['uses' => 'HistoryBoqController@update']);
+    $router->get('/DataBoqchildHistory/{id}', ['uses' => 'HistoryBoqController@DataBoqchildHistory']);
 
 });

@@ -4,23 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class BaselineBoqTable extends Migration
+class BaselineWbsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         //
-        Schema::create('BaselineBoq', function (Blueprint $table) {
+        Schema::create('baseline_wbs', function (Blueprint $table) {
             $table->id();
             $table->string('itemName');
             $table->string('parentItem')->nullable();
             $table->text('hasChild')->nullable();
             $table->integer('qty')->nullable();
             $table->integer('price')->nullable();
+            $table->date('startDate');
+            $table->date('endDate');
             $table->integer('amount')->nullable();
             $table->double('weight', 15, 8)->nullable();
             
@@ -69,6 +66,6 @@ class BaselineBoqTable extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('BaselineBoq');
+        Schema::dropIfExists('baseline_wbs');
     }
 }
