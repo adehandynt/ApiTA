@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ProjectNumber;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class ProjectNumberController extends Controller
 {
@@ -26,17 +28,27 @@ class ProjectNumberController extends Controller
     public function create(Request $request)
     {
         //
-        ProjectNumber::create([
+        Log::info('PN insert', \request()->all());
+        ProjectNumber::create(request()->all());
+        // try{
+        //     ProjectNumber::create(request()->all());
+        //     // ProjectNumber::create([
 
-            'ContracNumber'         => $request->ContracNumber,
-            'ProjectID'             => $request->ProjectID,
-            'BusinessPartnerID'     => $request->BusinessPartnerID,
-            'StartDate'             => $request->StartDate,
-            'EndDate'               => $request->EndDate,
-            'Length'                => $request->Length,
-            'TotalAmount'           => $request->TotalAmount,
-            'ScopeOfWork'           => $request->ScopeOfWork,
-        ]);
+        //     //     'ContractNumber'        => $request->ContracNumber,
+        //     //     'ProjectID'             => $request->ProjectID,
+        //     //     'BusinessPartnerID'     => $request->BusinessPartnerID,
+        //     //     'PositionID'            => $request->PositionID,
+        //     //     'StartDate'             => $request->StartDate,
+        //     //     'EndDate'               => $request->EndDate,
+        //     //     'Length'                => $request->Length,
+        //     //     'TotalAmount'           => $request->TotalAmount,
+        //     //     'ScopeOfWork'           => $request->ScopeOfWork,
+        //     // ]);
+
+        // } catch(Exception $e){
+        //     Log::error("error save", $e);
+        // }
+        
         return response()->json(['status' => 'success'], 200);
            
     }

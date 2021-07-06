@@ -27,6 +27,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/UpdateDataProject/{id}', ['uses' => 'ProjectController@update']);
     $router->post('/UpdateDataProjectSetDefault/{id}', ['uses' => 'ProjectController@updateSetDefault']);
     $router->get('/GetDataProjectSetDefault', ['uses' => 'ProjectController@GetProjectsetDefault']);
+    $router->get('/getLastProjectID', ['uses' => 'ProjectController@getLastProjectID']);
 
     //Bussiness Type
     $router->get('/DataBussinessType', ['uses' => 'BussinessTypeController@index']);
@@ -177,5 +178,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/UpdateDataActualWbs{id}', ['uses' => 'ActualWbsController@update']);
     $router->get('/DataActualWbschild/{id}', ['uses' => 'ActualWbsController@DataDataActualWbschild']);
     $router->get('/getAllDataActualWbs', ['uses' => 'ActualWbsController@getAllDataActualWbs']);
+    //MobilizationDate
+    $router->get('/DataMobilizationDate', ['uses' => 'MobilizationDateController@index']);
+    $router->post('/InsertMobilizationDate', ['uses' => 'MobilizationDateController@create']);
+    $router->get('/DataMobilizationDateByBusinessPartner/{BusinessPartner}', ['uses' => 'MobilizationDateController@byBusinessPartner']);
 
 });

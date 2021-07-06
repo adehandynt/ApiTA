@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
@@ -110,14 +111,23 @@ class ProjectController extends Controller
         
     }
 
+
     public function GetProjectsetDefault(Request $request)
     {
         //
         $data = Project::where('SetDefault','1')
-        ->select('ProjectID')
-        ->get();
+        ->first('ProjectID');
         return response($data);
 
+        
+    }
+
+    public function getLastProjectID()
+    {
+        //
+        $data = Project::max('ProjectID');
+        // Log::info("last_id", $data);
+        return response($data);
         
     }
 
