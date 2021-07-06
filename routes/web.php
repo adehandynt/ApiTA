@@ -164,4 +164,18 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/UpdateBoqHistory/{id}', ['uses' => 'HistoryBoqController@update']);
     $router->get('/DataBoqchildHistory/{id}', ['uses' => 'HistoryBoqController@DataBoqchildHistory']);
 
+    $router->get('/DataDocument', ['uses' => 'DocumentsController@index']);
+    $router->post('/InsertDataDocument', ['uses' => 'DocumentsController@create']);
+    $router->get('/DataDocumentByid/{id}', ['uses' => 'DocumentsController@show']);
+    $router->delete('/DeleteDataDocument/{id}', ['uses' => 'DocumentsController@destroy']);
+    $router->post('/UpdateDataDocument/{id}', ['uses' => 'DocumentsController@update']);
+
+    $router->get('/DataActualWbs', ['uses' => 'ActualWbsController@index']);
+    $router->post('/InsertDataActualWbs', ['uses' => 'ActualWbsController@create']);
+    $router->get('/DataActualWbsByid/{id}', ['uses' => 'ActualWbsController@show']);
+    $router->delete('/DeleteDataActualWbs/{id}', ['uses' => 'ActualWbsController@destroy']);
+    $router->post('/UpdateDataActualWbs{id}', ['uses' => 'ActualWbsController@update']);
+    $router->get('/DataActualWbschild/{id}', ['uses' => 'ActualWbsController@DataDataActualWbschild']);
+    $router->get('/getAllDataActualWbs', ['uses' => 'ActualWbsController@getAllDataActualWbs']);
+
 });

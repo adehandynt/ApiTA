@@ -1,18 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use DB;
 use Illuminate\Http\Request;
-use App\Models\BaselineBoq;
+use App\Models\ActualWbs;
 
-class BaselineBoqController extends Controller
+class ActualWbsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //
@@ -24,9 +18,10 @@ class BaselineBoqController extends Controller
          where a.hasChild IS NOT NULL AND (a.hasChild != "" OR a.hasChild != 0)
          ORDER BY COALESCE(a.parentItem, a.id), a.id');
     }
-    public function getAllBoq()
+
+    public function getAllDataActualWbs()
     {
-    return  BaselineBoq::all();
+    return  ActualWbs::all();
     }
 
     /**
@@ -37,7 +32,7 @@ class BaselineBoqController extends Controller
     public function create(Request $request)
     {
         //
-        $data = BaselineBoq::updateOrCreate([
+        $data = ActualWbs::updateOrCreate([
             
             'itemName'      => $request->itemName,
             'parentItem'      => $request->parentItem,
@@ -74,7 +69,7 @@ class BaselineBoqController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function show(BaselineBoq $BaselineBoq, $id)
+    public function show(ActualWbs $ActualWbs, $id)
     {
         //
         return DB::select('SELECT a.*,c.UnitName,d.currencyName
@@ -84,7 +79,7 @@ class BaselineBoqController extends Controller
         where a.id=?',[$id]);
     }
 
-    public function DataBoqchild(BaselineBoq $BaselineBoq, $id){
+    public function DataDataActualWbschild(ActualWbs $ActualWbs, $id){
         return  DB::select('SELECT a.*,c.UnitName,d.currencyName
          FROM baselineboq a
          left JOIN unit c on c.id=a.unitID
@@ -99,7 +94,7 @@ class BaselineBoqController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function edit(BaselineBoq $BaselineBoq)
+    public function edit(ActualWbs $ActualWbs)
     {
         //
     }
@@ -114,7 +109,7 @@ class BaselineBoqController extends Controller
     public function update(Request $request, $id)
     {
         //
-        BaselineBoq::where ('id',$id)->update($request->all());
+        ActualWbs::where ('id',$id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -127,7 +122,7 @@ class BaselineBoqController extends Controller
     public function destroy($id)
     {
         //
-        BaselineBoq::where('id',$id)->delete();
+        ActualWbs::where('id',$id)->delete();
         DB::delete('DELETE
          FROM baselineboq
          WHERE parentItem IN
