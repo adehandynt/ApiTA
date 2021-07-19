@@ -11,6 +11,7 @@ class WbsHistoryTable extends Migration
         //
         Schema::create('wbs_history', function (Blueprint $table) {
             $table->id();
+            $table->integer('actualWbsID');
             $table->string('itemName');
             $table->string('parentItem')->nullable();
             $table->text('hasChild')->nullable();
@@ -25,6 +26,8 @@ class WbsHistoryTable extends Migration
             $table->bigInteger('unitID')->nullable()->unsigned();
             $table->bigInteger('contractorID')->nullable()->unsigned();
             $table->bigInteger('CurrencyID')->nullable()->unsigned();
+            $table->integer('level');
+            $table->integer('parentLevel');
             
             $table->foreign('CurrencyID')
             ->nullable()->constrained()

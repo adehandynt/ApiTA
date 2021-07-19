@@ -21,8 +21,8 @@ class BaselineBoqController extends Controller
          FROM baselineboq a
          left JOIN unit c on c.id=a.unitID
          left JOIN currency d on d.id = a.CurrencyID
-         where a.hasChild IS NOT NULL AND (a.hasChild != "" OR a.hasChild != 0)
-         ORDER BY COALESCE(a.parentItem, a.id), a.id');
+        --  where a.hasChild IS NOT NULL AND (a.hasChild != "" OR a.hasChild != 0)
+        ORDER BY a.parentlevel, COALESCE(a.parentItem, a.id), a.level');
     }
     public function getAllBoq()
     {
@@ -50,6 +50,8 @@ class BaselineBoqController extends Controller
             'unitID'      => $request->unitID,
             'contractorID'      => $request->contractorID,
             'CurrencyID'      => $request->CurrencyID,
+            'level' => $request->level,
+            'parentlevel' => $request->parentlevel,
             'Created_By'    => $request->Created_By
 
             ]);
@@ -115,6 +117,13 @@ class BaselineBoqController extends Controller
     {
         //
         BaselineBoq::where ('id',$id)->update($request->all());
+        return response()->json(['status' => 'success'], 200);
+    }
+
+    public function UpdateBoqChildParentLevel(Request $request, $id)
+    {
+        //
+        BaselineBoq::where ('parentItem',$id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 

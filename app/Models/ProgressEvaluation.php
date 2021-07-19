@@ -9,5 +9,5 @@ class ProgressEvaluation extends Model
     //
     protected $table = 'progress_evaluation';
     protected $primarykey='id';
-    protected $fillable = ['periode','progressName','estimatedQty','accumulatedLastMonthQty','thisMonthQty','accumulatedThisMonthQty','weight','contractorID','ProjectID'];
+    protected $fillable = ['periode','progressName','estimatedQty','accumulatedLastMonthQty','thisMonthQty','accumulatedThisMonthQty','amount','weight','contractorID','ProjectID','ItemID','docID'];
 }

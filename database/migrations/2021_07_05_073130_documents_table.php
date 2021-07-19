@@ -15,12 +15,12 @@ class DocumentsTable extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->string('documentName');
-            $table->string('documentType');
-            $table->string('size');
+            $table->string('documentName')->nullable();
+            $table->string('documentType')->nullable();
+            $table->string('size')->nullable();
             $table->integer('author')->unsigned();
-            $table->string('status');
-            $table->text('desc');
+            $table->string('status')->nullable();
+            $table->text('desc')->nullable();
         
             
             $table->integer('ProjectID')->nullable()->unsigned();
@@ -31,7 +31,7 @@ class DocumentsTable extends Migration
             ->on('Projects')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-;
+            $table->timestamps();
         });
     }
 

@@ -28,6 +28,8 @@ class BaselineBoqTable extends Migration
             $table->bigInteger('unitID')->nullable()->unsigned();
             $table->bigInteger('contractorID')->nullable()->unsigned();
             $table->bigInteger('CurrencyID')->nullable()->unsigned();
+            $table->integer('level');
+            $table->integer('parentLevel');
             
             $table->foreign('CurrencyID')
             ->nullable()->constrained()

@@ -22,7 +22,7 @@ class ProgressEvaluationController extends Controller
     public function create(Request $request)
     {
         //
-        ProgressEvaluation::updateOrCreate([
+        $data=ProgressEvaluation::Create([
             
             'periode'                       => $request->periode,
             'progressName'                  => $request->progressName,
@@ -30,13 +30,16 @@ class ProgressEvaluationController extends Controller
             'accumulatedLastMonthQty'       => $request->accumulatedLastMonthQty,
             'thisMonthQty'                  => $request->thisMonthQty,
             'accumulatedThisMonthQty'       => $request->accumulatedThisMonthQty,
+            'amount'       => $request->amount,
             'weight'                        => $request->weight,
             'contractorID'                  => $request->contractorID,
-            'ProjectID'                     => $request->ProjectID
+            'ProjectID'                     => $request->ProjectID,
+            'ItemID'                        => $request->ItemID,
+            'docID'                        => $request->docID
             
             ]);
 
-            return response()->json(['status' => 'success'], 200);
+            return response()->json(['status' => 'success','doc_insert_id' => $data->id], 200);
     }
 
     /**

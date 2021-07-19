@@ -9,5 +9,5 @@ class HistoryBoq extends Model
     //
     protected $table = 'history_boq';
     protected $primarykey='id';
-    protected $fillable = ['boqID','itemName','parentItem','hasChild','qty','price','amount','weight','ProjectID','unitID','contractorID','CurrencyID', 'Created_By'];
+    protected $fillable = ['boqID','itemName','parentItem','hasChild','qty','price','amount','weight','ProjectID','unitID','contractorID','CurrencyID','level','parentLevel', 'Created_By'];
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use DB;
 use Illuminate\Http\Request;
 use App\Models\ActualWbs;
@@ -10,18 +11,79 @@ class ActualWbsController extends Controller
     public function index()
     {
         //
-         //return  DB::select('SELECT * FROM baselineboq ORDER BY COALESCE(parentItem, id), id');
-         return  DB::select('SELECT a.*,c.UnitName,d.currencyName
-         FROM baselineboq a
-         left JOIN unit c on c.id=a.unitID
-         left JOIN currency d on d.id = a.CurrencyID
-         where a.hasChild IS NOT NULL AND (a.hasChild != "" OR a.hasChild != 0)
-         ORDER BY COALESCE(a.parentItem, a.id), a.id');
+        //return  DB::select('SELECT * FROM baselineboq ORDER BY COALESCE(parentItem, id), id');
+        return  DB::select("SELECT
+        b.*,
+c.periode,
+c.progressName,
+c.estimatedQty,
+c.accumulatedLastMonthQty,
+c.thisMonthQty,
+c.accumulatedThisMonthQty,
+c.amount as actualAmount,
+c.weight as actualProgress,
+(SELECT sum(qty*price) from actual_wbs) as totalEstimated 
+FROM
+    projects a
+    LEFT JOIN actual_wbs b ON b.ProjectID = a.ProjectID
+    LEFT JOIN progress_evaluation c ON c.ItemID = b.id 
+WHERE
+    (a.ProjectID = '1' 
+    AND b.contractorID = '1')
+   --  AND
+   --  b.hasChild IS NOT NULL 
+   --  AND ( b.hasChild != '' OR b.hasChild != 0 ) 
+           GROUP BY b.id
+   ORDER BY b.parentlevel, COALESCE(b.parentItem, b.id), b.level");
+    }
+
+    public function DataActualWbsDetail($docID)
+    {
+       return DB::select("SELECT
+        b.*,
+        c.periode,
+        c.progressName,
+        c.estimatedQty,
+        c.accumulatedLastMonthQty,
+        c.thisMonthQty,
+        c.accumulatedThisMonthQty,
+        c.amount AS actualAmount,
+        c.weight AS actualProgress,
+        (
+        SELECT
+            sum( c.amount ) 
+        FROM
+            projects a
+            LEFT JOIN wbs_history b ON b.ProjectID = a.ProjectID
+            LEFT JOIN progress_evaluation c ON c.ItemID = b.actualWbsID 
+        WHERE
+        ( a.ProjectID = '1' AND b.contractorID = '1' AND c.docID = ? )) AS totalThisMonth,
+        (
+        SELECT
+            sum( c.accumulatedLastMonthQty * b.price ) 
+        FROM
+            projects a
+            LEFT JOIN wbs_history b ON b.ProjectID = a.ProjectID
+            LEFT JOIN progress_evaluation c ON c.ItemID = b.actualWbsID 
+        WHERE
+        ( a.ProjectID = '1' AND b.contractorID = '1' AND c.docID = ? )) AS totalLastMonth,
+        ( SELECT sum( qty * price ) FROM wbs_history ) AS totalEstimated 
+    FROM
+        projects a
+        LEFT JOIN wbs_history b ON b.ProjectID = a.ProjectID
+        LEFT JOIN progress_evaluation c ON c.ItemID = b.actualWbsID 
+    WHERE
+        ( a.ProjectID = '1' AND b.contractorID = '1' AND c.docID = ? ) --  AND
+    --  b.hasChild IS NOT NULL
+    --  AND ( b.hasChild != '' OR b.hasChild != 0 )
+        
+    GROUP BY
+        b.id ", [$docID,$docID,$docID]);
     }
 
     public function getAllDataActualWbs()
     {
-    return  ActualWbs::all();
+        return  ActualWbs::all();
     }
 
     /**
@@ -34,22 +96,27 @@ class ActualWbsController extends Controller
         //
         $data = ActualWbs::updateOrCreate([
             
+            'ProjectID'      => $request->ProjectID,
+            'contractorID'      => $request->contractorID
+        
+        ],[
             'itemName'      => $request->itemName,
             'parentItem'      => $request->parentItem,
             'hasChild'      => $request->hasChild,
+            'unitID'      => $request->unitID,
             'qty'      => $request->qty,
             'price'      => $request->price,
+            'startDate'      => $request->startDate,
+            'endDate'      => $request->endDate,
             'amount'      => $request->amount,
             'weight'      => $request->weight,
-            'ProjectID'      => $request->ProjectID,
-            'unitID'      => $request->unitID,
-            'contractorID'      => $request->contractorID,
             'CurrencyID'      => $request->CurrencyID,
+            'level' => $request->level,
+            'parentlevel' => $request->parentlevel,
             'Created_By'    => $request->Created_By
+        ]);
 
-            ]);
-
-            return response()->json(['status' => 'success','last_insert_id' => $data->id], 200);
+        return response()->json(['status' => 'success', 'last_insert_id' => $data->id], 200);
     }
 
     /**
@@ -76,16 +143,62 @@ class ActualWbsController extends Controller
         FROM baselineboq a
         left JOIN unit c on c.id=a.unitID
         left JOIN currency d on d.id = a.CurrencyID
-        where a.id=?',[$id]);
+        where a.id=?', [$id]);
     }
 
-    public function DataDataActualWbschild(ActualWbs $ActualWbs, $id){
-        return  DB::select('SELECT a.*,c.UnitName,d.currencyName
-         FROM baselineboq a
-         left JOIN unit c on c.id=a.unitID
-         left JOIN currency d on d.id = a.CurrencyID
-         where a.parentItem = ? and (a.hasChild IS NULL or a.hasChild = 0)
-         ORDER BY COALESCE(a.parentItem, a.id), a.id', [$id]);
+    public function DataActualWbschild(ActualWbs $ActualWbs, $id)
+    {
+        return  DB::select('SELECT
+        b.*,
+        c.periode,
+        c.progressName,
+        c.estimatedQty,
+        c.accumulatedLastMonthQty,
+        c.thisMonthQty,
+        c.accumulatedThisMonthQty,
+        c.amount as actualAmount,
+        c.weight as actualProgress 
+        FROM
+        projects a
+        LEFT JOIN actual_wbs b ON b.ProjectID = a.ProjectID
+        LEFT JOIN progress_evaluation c ON c.ProjectID = a.ProjectID
+         where  (a.ProjectID = "1"
+         AND b.contractorID = "1") and b.parentItem = ? and (b.hasChild IS NULL or b.hasChild = 0)
+         ORDER BY COALESCE(b.parentItem, b.id), b.id', [$id]);
+    }
+
+    public function DataDetailActualWbsByid(ActualWbs $ActualWbs, $id)
+    {
+        return  DB::select('SELECT
+        b.*,
+        c.periode,
+        c.progressName,
+        c.estimatedQty,
+        c.accumulatedLastMonthQty,
+        c.thisMonthQty,
+        c.accumulatedThisMonthQty,
+        c.amount as actualAmount,
+        c.weight as actualProgress,
+        (SELECT sum(qty*price) from actual_wbs) as totalEstimated
+        FROM
+        projects a
+        LEFT JOIN actual_wbs b ON b.ProjectID = a.ProjectID
+        LEFT JOIN progress_evaluation c ON c.ProjectID = a.ProjectID
+         where  b.id = ? ', [$id]);
+    }
+
+    public function GetActualParentItem(ActualWbs $ActualWbs, $projectID, $consultantID)
+    {
+        return  DB::select("SELECT
+        * from actual_wbs
+        where (hasChild != '' OR hasChild != 0) AND (ProjectID=? AND contractorID=?)",[$projectID, $consultantID]);
+    }
+
+    public function GetActualChildItem(ActualWbs $ActualWbs, $projectID, $consultantID, $itemID)
+    {
+        return  DB::select("SELECT
+        * from actual_wbs
+        where (ProjectID=? AND contractorID=? AND parentItem=?)",[$projectID, $consultantID, $itemID]);
     }
 
     /**
@@ -109,7 +222,7 @@ class ActualWbsController extends Controller
     public function update(Request $request, $id)
     {
         //
-        ActualWbs::where ('id',$id)->update($request->all());
+        ActualWbs::where('id', $id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -122,7 +235,7 @@ class ActualWbsController extends Controller
     public function destroy($id)
     {
         //
-        ActualWbs::where('id',$id)->delete();
+        ActualWbs::where('id', $id)->delete();
         DB::delete('DELETE
          FROM baselineboq
          WHERE parentItem IN
@@ -130,7 +243,7 @@ class ActualWbsController extends Controller
              SELECT parentItem
              FROM baselineboq
              WHERE parentItem = ?
-         )',[$id]);
+         )', [$id]);
         return response()->json(['status' => 'success'], 200);
     }
 }

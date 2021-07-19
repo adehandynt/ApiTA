@@ -2,15 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StationProgress;
 use Illuminate\Http\Request;
-use App\Models\Documents;
+use DB;
 
-class DocumentsController extends Controller
+class StationProgressController extends Controller
 {
     public function index()
     {
         //
-        return Documents::all();
+        return  DB::select("SELECT
+        a.*,
+        b.description,
+        c.BussinessName 
+    FROM
+        actual_wbs a
+        JOIN station_progress b ON b.itemID = a.id 
+        JOIN bussinesspartner c ON c.id = a.contractorID
+    WHERE
+        b.ProjectID = 1 
+        AND b.ContractorID = 1 
+    GROUP BY
+        a.itemName");
     }
 
     /**
@@ -21,19 +34,15 @@ class DocumentsController extends Controller
     public function create(Request $request)
     {
         //
-        $data=Documents::Create([
-
-            'documentName'      => $request->documentName,
-            'documentType'      => $request->documentType,
-            'size'      => $request->size,
-            'author'      => $request->author,
-            'status'      => $request->status,
-            'desc'      => $request->desc,
-            'projectID'      => $request->projectID
-
+        StationProgress::updateOrCreate([
+            'stationName'      => $request->stationName,
+            'description'      => $request->description,
+            'itemID'      => $request->itemID,
+            'ProjectID'      => $request->ProjectID,
+            'ContractorID'      => $request->ContractorID,
         ]);
 
-        return response()->json(['status' => 'success','doc_insert_id' => $data->id], 200);
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -53,10 +62,10 @@ class DocumentsController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function show(Documents $Documents, $id)
+    public function show(StationProgress $StationProgress, $id)
     {
         //
-        $data = Documents::where('id', $id)->get();
+        $data = StationProgress::where('id', $id)->get();
         return response($data);
     }
 
@@ -66,7 +75,7 @@ class DocumentsController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function edit(Documents $Documents)
+    public function edit(StationProgress $StationProgress)
     {
         //
     }
@@ -81,7 +90,7 @@ class DocumentsController extends Controller
     public function update(Request $request, $id)
     {
         //
-        Documents::where('id', $id)->update($request->all());
+        StationProgress::where('id', $id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -94,7 +103,7 @@ class DocumentsController extends Controller
     public function destroy($id)
     {
         //
-        Documents::where('id', $id)->delete();
+        StationProgress::where('id', $id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
 }

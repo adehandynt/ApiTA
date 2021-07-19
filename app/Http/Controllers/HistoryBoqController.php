@@ -37,6 +37,8 @@ class HistoryBoqController extends Controller
             'unitID'      => $request->unitID,
             'contractorID'      => $request->contractorID,
             'CurrencyID'      => $request->CurrencyID,
+            'level' => $request->level,
+            'parentlevel' => $request->parentlevel,
             'Created_By'    => $request->Created_By
 
             ]);

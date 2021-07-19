@@ -155,6 +155,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataBoqByid/{id}', ['uses' => 'BaselineBoqController@show']);
     $router->delete('/DeleteBoq/{id}', ['uses' => 'BaselineBoqController@destroy']);
     $router->post('/UpdateBoq/{id}', ['uses' => 'BaselineBoqController@update']);
+    $router->post('/UpdateBoqChildParentLevel/{id}', ['uses' => 'BaselineBoqController@UpdateBoqChildParentLevel']);
     $router->get('/DataBoqchild/{id}', ['uses' => 'BaselineBoqController@DataBoqchild']);
     $router->get('/getAllBoq', ['uses' => 'BaselineBoqController@getAllBoq']);
 
@@ -172,15 +173,43 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/UpdateDataDocument/{id}', ['uses' => 'DocumentsController@update']);
 
     $router->get('/DataActualWbs', ['uses' => 'ActualWbsController@index']);
+    $router->get('/DataActualWbsDetail/{docID}', ['uses' => 'ActualWbsController@DataActualWbsDetail']);
+    $router->get('/GetActualParentItem/{projectID}/{consultantID}', ['uses' => 'ActualWbsController@GetActualParentItem']);
+    $router->get('/GetActualChildItem/{projectID}/{consultantID}/{itemID}', ['uses' => 'ActualWbsController@GetActualChildItem']);
     $router->post('/InsertDataActualWbs', ['uses' => 'ActualWbsController@create']);
     $router->get('/DataActualWbsByid/{id}', ['uses' => 'ActualWbsController@show']);
+    $router->get('/DataDetailActualWbsByid/{id}', ['uses' => 'ActualWbsController@DataDetailActualWbsByid']);
     $router->delete('/DeleteDataActualWbs/{id}', ['uses' => 'ActualWbsController@destroy']);
     $router->post('/UpdateDataActualWbs{id}', ['uses' => 'ActualWbsController@update']);
-    $router->get('/DataActualWbschild/{id}', ['uses' => 'ActualWbsController@DataDataActualWbschild']);
+    $router->get('/DataActualWbschild/{id}', ['uses' => 'ActualWbsController@DataActualWbschild']);
     $router->get('/getAllDataActualWbs', ['uses' => 'ActualWbsController@getAllDataActualWbs']);
     //MobilizationDate
     $router->get('/DataMobilizationDate', ['uses' => 'MobilizationDateController@index']);
     $router->post('/InsertMobilizationDate', ['uses' => 'MobilizationDateController@create']);
     $router->get('/DataMobilizationDateByBusinessPartner/{BusinessPartner}', ['uses' => 'MobilizationDateController@byBusinessPartner']);
+
+    $router->get('/DataProgressEvaluation', ['uses' => 'ProgressEvaluationController@index']);
+    $router->post('/InsertDataProgressEvaluation', ['uses' => 'ProgressEvaluationController@create']);
+    $router->get('/DataProgressEvaluationByid/{id}', ['uses' => 'ProgressEvaluationController@show']);
+    $router->delete('/DeleteDataProgressEvaluation/{id}', ['uses' => 'ProgressEvaluationController@destroy']);
+    $router->post('/UpdateDataProgressEvaluation/{id}', ['uses' => 'ProgressEvaluationController@update']);
+
+    $router->get('/DataWbsHistory', ['uses' => 'WbsHistoryController@index']);
+    $router->post('/InsertDataWbsHistory', ['uses' => 'WbsHistoryController@create']);
+    $router->get('/DataWbsHistoryByid/{id}', ['uses' => 'WbsHistoryController@show']);
+    $router->delete('/DeleteDataWbsHistory/{id}', ['uses' => 'WbsHistoryController@destroy']);
+
+    $router->get('/DataDocument', ['uses' => 'DocumentsController@index']);
+    $router->post('/InsertDataDocument', ['uses' => 'DocumentsController@create']);
+    $router->get('/DataDocumentByid/{id}', ['uses' => 'DocumentsController@show']);
+    $router->delete('/DeleteDataDocument/{id}', ['uses' => 'DocumentsController@destroy']);
+
+    $router->post('/InsertDataStation', ['uses' => 'StationProgressController@create']);
+    $router->post('/InsertDataSubItem', ['uses' => 'SubStationProgressController@create']);
+    $router->get('/DataStation', ['uses' => 'StationProgressController@index']);
+    $router->get('/getSubItem/{id}', ['uses' => 'SubStationProgressController@show']);
+    $router->delete('/DeleteSubItem/{id}', ['uses' => 'SubStationProgressController@destroy']);
+    
+  
 
 });
