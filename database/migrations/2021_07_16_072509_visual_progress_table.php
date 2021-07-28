@@ -13,7 +13,14 @@ class VisualProgressTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('visual_progress', function (Blueprint $table) {
+            $table->id();
+            $table->string('itemVisualName')->nullable();
+            $table->integer('itemID')->nullable();
+            $table->integer('contractorID');
+            $table->integer('projectID');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,6 +30,6 @@ class VisualProgressTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('visual_progress');
     }
 }

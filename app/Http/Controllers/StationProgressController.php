@@ -65,7 +65,12 @@ class StationProgressController extends Controller
     public function show(StationProgress $StationProgress, $id)
     {
         //
-        $data = StationProgress::where('id', $id)->get();
+        $data = StationProgress::where('station_progress.itemID', $id)
+        ->join('bussinesspartner', 'station_progress.ContractorID', '=', 'bussinesspartner.id')
+        ->join('actual_wbs', 'station_progress.itemID', '=', 'actual_wbs.id')
+        ->select('station_progress.*','bussinesspartner.BussinessName','actual_wbs.itemName')
+        ->groupBy('actual_wbs.itemName')
+        ->get();
         return response($data);
     }
 
@@ -90,7 +95,7 @@ class StationProgressController extends Controller
     public function update(Request $request, $id)
     {
         //
-        StationProgress::where('id', $id)->update($request->all());
+        StationProgress::where('itemID', $id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -103,7 +108,7 @@ class StationProgressController extends Controller
     public function destroy($id)
     {
         //
-        StationProgress::where('id', $id)->delete();
+        StationProgress::where('itemID', $id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
 }

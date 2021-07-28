@@ -127,6 +127,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
      $router->get('/DataUser', ['uses' => 'UserController@index']);
      $router->post('/InsertDataUser', ['uses' => 'UserController@create']);
      $router->get('/DataUserByid/{id}', ['uses' => 'UserController@show']);
+     $router->post('/getUser', ['uses' => 'UserController@getUser']);
      $router->get('/DataUserPrivilegedByid/{id}', ['uses' => 'UserController@UserPrivilegedByid']);
      $router->delete('/DeleteDataUser/{id}', ['uses' => 'UserController@destroy']);
      $router->post('/UpdateUser/{id}', ['uses' => 'UserController@update']);
@@ -207,9 +208,24 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/InsertDataStation', ['uses' => 'StationProgressController@create']);
     $router->post('/InsertDataSubItem', ['uses' => 'SubStationProgressController@create']);
     $router->get('/DataStation', ['uses' => 'StationProgressController@index']);
+    $router->get('/DataStationDetail/{id}', ['uses' => 'StationProgressController@show']);
     $router->get('/getSubItem/{id}', ['uses' => 'SubStationProgressController@show']);
+    $router->get('/getSubItemTable/{id}', ['uses' => 'SubStationProgressController@getSubItemTable']);
+    $router->get('/getSubItemRowTable/{id}', ['uses' => 'SubStationProgressController@getSubItemRowTable']);
+    $router->post('/UpdateSubItem/{id}', ['uses' => 'SubStationProgressController@update']);
+    $router->post('/updateStation/{id}', ['uses' => 'StationProgressController@update']);
     $router->delete('/DeleteSubItem/{id}', ['uses' => 'SubStationProgressController@destroy']);
+    $router->delete('/DeleteStation/{id}', ['uses' => 'StationProgressController@destroy']);
     
+    $router->post('/InsertVisualProgress', ['uses' => 'VisualProgressController@create']);
+    $router->post('/InsertVisualProgressImage', ['uses' => 'VisualProgressImageController@create']);
+    $router->get('/DataVisualProgress/{projectID}/{contractorID}', ['uses' => 'VisualProgressController@index']);
+    $router->get('/OtherDataVisualProgress/{projectID}/{contractorID}', ['uses' => 'VisualProgressController@showOtherVisual']);
+    $router->get('/DataVisualProgressDetail/{id}', ['uses' => 'VisualProgressController@DataVisualProgressDetail']);
+    $router->get('/OtherDataVisualProgressDetail/{id}', ['uses' => 'VisualProgressController@OtherDataVisualProgressDetail']);
+    $router->delete('/DeleteImage/{id}', ['uses' => 'VisualProgressImageController@destroy']);
+    $router->delete('/DeleteVisual/{id}', ['uses' => 'VisualProgressController@destroy']);
+    $router->get('/getPerformance/{projectId}/{contractorId}', ['uses' => 'PerformanceAnalysisController@getPerformance']);
   
 
 });

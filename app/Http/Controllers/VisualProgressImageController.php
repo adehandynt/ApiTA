@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\VisualProgress;
+use App\Models\VisualProgressImage;
 use DB;
 
-class VisualProgressController extends Controller
+class VisualProgressImageController extends Controller
 {
     public function index($projectID,$contractorID)
     {
@@ -22,9 +22,7 @@ class VisualProgressController extends Controller
         LEFT JOIN visual_progress_image c ON c.visualProgressID = b.id
     WHERE
         b.projectID = 1 
-        AND b.contractorID = 1
-        GROUP BY
-        idVisual");
+        AND b.contractorID = 1");
     }
     
 
@@ -33,7 +31,6 @@ class VisualProgressController extends Controller
         //
         return  DB::select("SELECT
         b.*,
-		b.id as idVisual,
         c.*
     FROM
         visual_progress b 
@@ -59,20 +56,6 @@ class VisualProgressController extends Controller
         b.id= ?",[$id]);
     }
 
-    public function OtherDataVisualProgressDetail($id){
-        return  DB::select("SELECT
-        b.*,
-        c.*,
-        a.BussinessName
-    FROM
-        bussinesspartner a
-        LEFT JOIN visual_progress b ON b.contractorID = a.id 
-        LEFT JOIN visual_progress_image c ON c.visualProgressID = b.id
-    WHERE
-        b.id= ?",[$id]);
-    }
-
-
     /**
      * Show the form for creating a new resource.
      *
@@ -81,12 +64,14 @@ class VisualProgressController extends Controller
     public function create(Request $request)
     {
         //
-        VisualProgress::updateOrCreate([
+        VisualProgressImage::updateOrCreate([
             
-            'itemVisualName'      => $request->itemVisualName,
-            'itemID'      => $request->itemID,
-            'contractorID'      => $request->contractorID,
-            'projectID'      => $request->projectID
+            'visualDesc'      => $request->visualDesc,
+            'imgUrl'      => $request->imgUrl,
+            'visualDate'      => $request->visualDate,
+            'imgName'      => $request->imgName,
+            'imgExt'      => $request->imgExt,
+            'visualProgressID'      => $request->visualProgressID
 
             ]);
 
@@ -110,10 +95,10 @@ class VisualProgressController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function show(VisualProgress $unit, $id)
+    public function show(VisualProgressImage $unit, $id)
     {
         //
-        $data = VisualProgress::where('id', $id)->get();
+        $data = VisualProgressImage::where('id', $id)->get();
         return response($data);
     }
 
@@ -123,7 +108,7 @@ class VisualProgressController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function edit(VisualProgress $unit)
+    public function edit(VisualProgressImage $unit)
     {
         //
     }
@@ -138,7 +123,7 @@ class VisualProgressController extends Controller
     public function update(Request $request, $id)
     {
         //
-        VisualProgress::where ('id',$id)->update($request->all());
+        VisualProgressImage::where ('id',$id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -151,7 +136,7 @@ class VisualProgressController extends Controller
     public function destroy($id)
     {
         //
-        VisualProgress::where('id',$id)->delete();
+        VisualProgressImage::where('id',$id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
 }

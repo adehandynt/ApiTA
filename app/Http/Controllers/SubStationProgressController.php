@@ -38,7 +38,8 @@ class SubStationProgressController extends Controller
             'itemID'      => $request->itemID,
             'parentID'      => $request->parentID,
             'stationID'      => $request->stationID,
-            'completedSatus'      => $request->completedSatus
+            'completedStatus'      => $request->completedStatus,
+            'completionDate' => $request->completionDate
         ]);
         return response()->json(['status' => 'success'], 200);
     }
@@ -70,6 +71,34 @@ class SubStationProgressController extends Controller
             JOIN sub_station_progress b ON b.ItemID = a.id 
         WHERE
              b.parentID  = ?", [$id]);
+    }
+
+    public function getSubItemTable(SubStationProgress $SubStationProgress, $id){
+        return  DB::select("SELECT
+        b.*
+    FROM
+        actual_wbs a
+        JOIN station_progress b ON b.ItemID = a.id
+        JOIN sub_station_progress c ON c.parentID = b.itemID 
+    WHERE
+        c.parentID = ? 
+    GROUP BY
+        b.id ", [$id]);
+    }
+
+    public function getSubItemRowTable(SubStationProgress $SubStationProgress, $id){
+        return  DB::select("SELECT
+        c.*,
+        a.itemName,
+        b.id as idSubItem
+    FROM
+        actual_wbs a
+        JOIN sub_station_progress b ON b.ItemID = a.id
+        JOIN station_progress c ON c.ItemID = b.parentID 
+    WHERE
+        b.parentID = ? 
+    GROUP BY
+        a.itemName", [$id]);
     }
 
     /**

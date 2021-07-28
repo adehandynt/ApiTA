@@ -18,7 +18,8 @@ class SubStationProgressTable extends Migration
             $table->string('itemID');
             $table->string('parentID');
             $table->integer('stationID')->nullable();
-            $table->integer('completedSatus');
+            $table->integer('completedStatus');
+            $table->date('completionDate')->nullable();
             $table->timestamps();
         });
     }
