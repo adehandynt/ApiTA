@@ -110,6 +110,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     //Project Number
     $router->get('/DataProjectNumber', ['uses' => 'ProjectNumberController@index']);
     $router->post('/InsertProjectNumber', ['uses' => 'ProjectNumberController@create']);
+    $router->get('/DataProjectnumberByid/{id}', ['uses' => 'ProjectNumberController@show']);
 
     //Contractor Equipment 
     $router->get('/DataContractorEquipment', ['uses' => 'ContractorEquipmentController@index']);
@@ -130,5 +131,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataMobilizationDate', ['uses' => 'MobilizationDateController@index']);
     $router->post('/InsertMobilizationDate', ['uses' => 'MobilizationDateController@create']);
     $router->get('/DataMobilizationDateByBusinessPartner/{BusinessPartner}', ['uses' => 'MobilizationDateController@byBusinessPartner']);
-
+    $router->delete('/DeleteMobilizationDate/{id}', ['uses' => 'MobilizationDateController@destroy']);
+    $router->get('/DataMobilizationDateByid/{id}', ['uses' => 'MobilizationDateController@show']);
+    $router->post('/UpdateMobilizationDate/{id}', ['uses' => 'MobilizationDateController@update']);
 });

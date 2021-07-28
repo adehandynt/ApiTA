@@ -65,6 +65,7 @@ class ProjectNumberController extends Controller
     {
         //
     }
+    
 
     /**
      * Display the specified resource.
@@ -72,9 +73,15 @@ class ProjectNumberController extends Controller
      * @param  \App\Models\ProjectNumber  $projectNumber
      * @return \Illuminate\Http\Response
      */
-    public function show(ProjectNumber $projectNumber)
+    public function show(ProjectNumber $ProjectNumber, $id)
     {
         //
+        $data = ProjectNumber::where('ProjectID' , $id)
+        // ->join('projects','project_numbers.ProjectID','=','projects.ProjectID')
+        ->join('bussinesspartner','project_numbers.BusinessPartnerID','=','bussinesspartner.id')
+        ->select('project_numbers.*','bussinesspartner.BussinessName')
+        ->get();
+        return response($data);
     }
 
     /**
