@@ -71,7 +71,7 @@ class MobilizationDateController extends Controller
      * @param  \App\Models\RiskManagement  $riskManagement
      * @return \Illuminate\Http\Response
      */
-    public function show(RiskManagement $MobilizationDate, $id)
+    public function show(MobilizationDate $MobilizationDate, $id)
     {
         //
         return MobilizationDate::where('mobilization_dates.id', $id)
@@ -80,7 +80,7 @@ class MobilizationDateController extends Controller
         ->join('personil','mobilization_dates.PersonilID','=','personil.id')
         ->join('positioncategory','mobilization_dates.PositionCatID','=','positioncategory.id')
         ->join('position','mobilization_dates.PositionID','=','position.id')
-        ->select('mobilization_dates.*','bussinesspartner.BussinessName','positioncategory.CategoryName', 'position.PositionName')
+        ->select('mobilization_dates.*','bussinesspartner.BussinessName','personil.PersonilName','positioncategory.CategoryName', 'position.PositionName')
         ->get();
     }
 
@@ -106,15 +106,7 @@ class MobilizationDateController extends Controller
     {
         //
         // RiskManagement::where('id', $id)->update($request->all());
-        RiskManagement::where('id', $id)->update([
-            'DescriptionRisk' => \request('DescriptionRisk'),
-            'ProjectID' => \request('ProjectID'),
-            'PersonilID' => \request('PersonilID'),
-            'Rank' => \request('Rank'),
-            'DueDateRisk' => \request('DueDateRisk'),
-            'Mitigation' => \request('Mitigation')
-        ]);
-       
+        MobilizationDate::where ('id',$id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -127,7 +119,7 @@ class MobilizationDateController extends Controller
     public function destroy($id)
     {
         //
-        RiskManagement::where('id', $id)->delete();
+        MobilizationDate::where('id', $id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
 

@@ -70,7 +70,10 @@ class ProjectController extends Controller
     public function show(Project $project, $id)
     {
         //
-        $data = Project::where('ProjectID', $id)->get();
+        $data = Project::where('ProjectID', $id)
+        ->join('currency','projects.CurrencyType','=','currency.id')
+        ->select('projects.*', 'currency.CurrencyName')
+        ->get();
         return response($data);
     }
 
@@ -130,6 +133,8 @@ class ProjectController extends Controller
         return response($data);
         
     }
+
+    
 
     /**
      * Remove the specified resource from storage.

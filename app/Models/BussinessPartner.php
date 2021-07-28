@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BussinessPartner extends Model
 {
     //
-    protected $table='bussinesspartner';
+    protected $table='BussinessPartner';
     protected $primarykey='id';
     protected $fillable = ['BussinessName','BussinessTypeID','Address',
                             'CountryID','CityID','Phone','Fax','MobilePhone','Email','Web'];
