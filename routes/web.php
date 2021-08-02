@@ -136,7 +136,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/InsertProjectNumber', ['uses' => 'ProjectNumberController@create']);
     $router->get('/DataProjectnumberByid/{id}', ['uses' => 'ProjectNumberController@show']);
 
-    //Contractor Equipment 
+    //Contractor Equipment
     $router->get('/DataContractorEquipment', ['uses' => 'ContractorEquipmentController@index']);
     $router->post('/InsertContractorEquipment', ['uses' => 'ContractorEquipmentController@create']);
     $router->delete('/DeleteContractorEquipment/{id}', ['uses' => 'ContractorEquipmentController@destroy']);
@@ -217,7 +217,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/updateStation/{id}', ['uses' => 'StationProgressController@update']);
     $router->delete('/DeleteSubItem/{id}', ['uses' => 'SubStationProgressController@destroy']);
     $router->delete('/DeleteStation/{id}', ['uses' => 'StationProgressController@destroy']);
-    
+
     $router->post('/InsertVisualProgress', ['uses' => 'VisualProgressController@create']);
     $router->post('/InsertVisualProgressImage', ['uses' => 'VisualProgressImageController@create']);
     $router->get('/DataVisualProgress/{projectID}/{contractorID}', ['uses' => 'VisualProgressController@index']);
@@ -227,9 +227,23 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('/DeleteImage/{id}', ['uses' => 'VisualProgressImageController@destroy']);
     $router->delete('/DeleteVisual/{id}', ['uses' => 'VisualProgressController@destroy']);
     $router->get('/getPerformance/{projectId}/{contractorId}', ['uses' => 'PerformanceAnalysisController@getPerformance']);
-  
+
 
     $router->delete('/DeleteMobilizationDate/{id}', ['uses' => 'MobilizationDateController@destroy']);
     $router->get('/DataMobilizationDateByid/{id}', ['uses' => 'MobilizationDateController@show']);
     $router->post('/UpdateMobilizationDate/{id}', ['uses' => 'MobilizationDateController@update']);
+
+    //weather info
+    $router->get('/weatherInfo', 'WeatherInfoController@index');
+    $router->post('/weatherInfo', 'WeatherInfoController@store');
+    $router->get('/weatherInfo/{id}', 'WeatherInfoController@show');
+    $router->delete('/weatherInfo/{id}', 'WeatherInfoController@destroy');
+    $router->post('/weatherInfo/{id}', 'WeatherInfoController@update');
+
+    //issue management
+    $router->get('/issue', 'IssueManagementController@index');
+    $router->post('/issue', 'IssueManagementController@store');
+    $router->get('/issue/{id}', 'IssueManagementController@show');
+    $router->delete('/issue/{id}', 'IssueManagementController@destroy');
+    $router->post('/issue/{id}', 'IssueManagementController@update');
 });
