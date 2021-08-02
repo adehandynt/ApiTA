@@ -17,7 +17,7 @@ class CreateProjectNumbersTable extends Migration
             $table->id();
             $table->integer('ContractNumber');
             $table->integer('ProjectID')->unsigned();
-            $table->foreign('ProjectID')->references('ProjectID')->on('Projects')
+            $table->foreign('ProjectID')->references('ProjectID')->on('projects')
             ->onUpdate('cascade')
             ->onDelete('cascade');
             $table->bigInteger('BusinessPartnerID')->unsigned();
