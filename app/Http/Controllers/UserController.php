@@ -40,11 +40,28 @@ class UserController extends Controller
         user a 
         LEFT JOIN personil b ON b.Email = a.UserMail
         LEFT JOIN bussinesspartner c ON c.id = b.BussinessPartnerID
-        LEFT JOIN project_numbers d ON d.BusinessPartnerID = c.id
-        LEFT JOIN (SELECT * from projects Where setDefault='1') e ON e.ProjectID = d.ProjectID
+        -- LEFT JOIN project_numbers d ON d.BusinessPartnerID = c.id
+        -- LEFT JOIN (SELECT * from projects Where setDefault='1') e ON e.ProjectID = d.ProjectID
     WHERE
         a.UserLogin = '".$request->UserLogin."'
         AND a.password = BINARY '".$request->password."'");
+
+        if ($data) {
+            return $data;
+        } else {
+            return response()->json(['status' => 'empty'], 202);
+        }
+    }
+
+    public function getUserProject(Request $request){
+        
+        $data = DB::select("SELECT b.*
+    FROM
+        project_numbers a
+        LEFT JOIN (SELECT * from projects Where setDefault='1') b ON b.ProjectID = a.ProjectID
+    WHERE
+        a.BusinessPartnerID = '".$request->BusinessPartnerID."'
+        ");
 
         if ($data) {
             return $data;

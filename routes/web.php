@@ -129,6 +129,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
      $router->post('/InsertDataUser', ['uses' => 'UserController@create']);
      $router->get('/DataUserByid/{id}', ['uses' => 'UserController@show']);
      $router->post('/getUser', ['uses' => 'UserController@getUser']);
+     $router->post('/getUserProject', ['uses' => 'UserController@getUserProject']);
      $router->get('/DataUserPrivilegedByid/{id}', ['uses' => 'UserController@UserPrivilegedByid']);
      $router->delete('/DeleteDataUser/{id}', ['uses' => 'UserController@destroy']);
      $router->post('/UpdateUser/{id}', ['uses' => 'UserController@update']);
