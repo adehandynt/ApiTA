@@ -90,7 +90,7 @@ class MobilizationDateController extends Controller
      * @param  \App\Models\RiskManagement  $riskManagement
      * @return \Illuminate\Http\Response
      */
-    public function edit(RiskManagement $riskManagement)
+    public function edit(MobilizationDate $riskManagement)
     {
         //
     }

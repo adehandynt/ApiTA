@@ -4,15 +4,11 @@ namespace App\Http\Controllers;
 
 use DB;
 use Illuminate\Http\Request;
-use App\Models\BaselineWbs;
+use App\Models\ActualWbs;
 
-class BaselineWbsController extends Controller
+class CurrentWbsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index($id, $projectid)
     {
         //
@@ -25,7 +21,7 @@ class BaselineWbsController extends Controller
         where a.ProjectID="' . $projectid . '" AND a.contractorID="' . $id . '"
         ORDER BY a.parentlevel, COALESCE(a.parentItem, a.id), a.level');
     }
-    public function DataWbsLevel($id, $itemid, $projectid)
+    public function DataActualWbsLevel($id, $itemid, $projectid)
     {
         //
         //return  DB::select('SELECT * FROM baseline_wbs ORDER BY COALESCE(parentItem, id), id');
@@ -37,14 +33,14 @@ class BaselineWbsController extends Controller
         where a.ProjectID="' . $projectid . '" AND a.contractorID="' . $id . '" AND (a.id="' . $itemid . '" OR a.parentItem="' . $itemid . '")
         ORDER BY a.parentlevel, COALESCE(a.parentItem, a.id), a.level');
     }
-    public function getAllWbs($contractorID,$projectID)
+    public function getAllCurrentWbs($contractorID,$projectID)
     {
-        $data = BaselineWbs::where([
+        $data = ActualWbs::where([
             ['contractorID', '=',  $contractorID],['ProjectID', '=',  $projectID]])->get();
         return response($data);
     }
 
-    public function getBaselineChart()
+    public function getCurrentWbsChart()
     {
         return  DB::select("SELECT
 	a.* FROM
@@ -62,15 +58,10 @@ class BaselineWbsController extends Controller
 	a.x");
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
         //
-        $data = BaselineWbs::updateOrCreate([
+        $data = ActualWbs::updateOrCreate([
 
             'itemName'      => $request->itemName,
             'parentItem'      => $request->parentItem,
@@ -92,24 +83,14 @@ class BaselineWbsController extends Controller
         return response()->json(['status' => 'success', 'last_insert_id' => $data->id], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Currency  $currency
-     * @return \Illuminate\Http\Response
-     */
-    public function show(BaselineWbs $BaselineWbs, $id)
+
+    public function show(ActualWbs $ActualWbs, $id)
     {
         //
         return DB::select('SELECT a.*,c.UnitName,d.currencyName
@@ -119,7 +100,7 @@ class BaselineWbsController extends Controller
         where a.id=?', [$id]);
     }
 
-    public function DataWbschild(BaselineWbs $BaselineWbs, $id)
+    public function DataActualWbschild(ActualWbs $ActualWbs, $id)
     {
         return  DB::select('SELECT a.*,c.UnitName,d.currencyName
          FROM baseline_wbs a
@@ -129,13 +110,8 @@ class BaselineWbsController extends Controller
          ORDER BY COALESCE(a.parentItem, a.id), a.id', [$id]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Currency  $currency
-     * @return \Illuminate\Http\Response
-     */
-    public function getWeightWbs($projectid, $contractorid)
+
+    public function getWeightActualWbs($projectid, $contractorid)
     {
         return DB::select('SELECT
         a.id,
@@ -157,37 +133,26 @@ class BaselineWbsController extends Controller
         a.id');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Currency  $currency
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         //
-        BaselineWbs::where('id', $id)->update($request->all());
+        ActualWbs::where('id', $id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
-    public function UpdateWbsChildParentLevel(Request $request, $id)
+    public function UpdateActualWbsChildParentLevel(Request $request, $id)
     {
         //
-        BaselineWbs::where('parentItem', $id)->update($request->all());
+        ActualWbs::where('parentItem', $id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Currency  $currency
-     * @return \Illuminate\Http\Response
-     */
+   
     public function destroy($id)
     {
         //
-        BaselineWbs::where('id', $id)->delete();
+        ActualWbs::where('id', $id)->delete();
         DB::delete('DELETE
          FROM baseline_wbs
          WHERE parentItem IN

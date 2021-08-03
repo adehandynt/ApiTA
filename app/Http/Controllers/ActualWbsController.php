@@ -81,9 +81,11 @@ WHERE
         b.id ", [$docID,$docID,$docID]);
     }
 
-    public function getAllDataActualWbs()
+    public function getAllDataActualWbs($contractorID,$projectID)
     {
-        return  ActualWbs::all();
+         $data = ActualWbs::where([
+            ['contractorID', '=',  $contractorID],['ProjectID', '=',  $projectID]])->get();
+        return response($data);
     }
 
     /**

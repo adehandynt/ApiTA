@@ -76,6 +76,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('/DeleteDataBusinessPartner/{id}', ['uses' => 'BussinessPartnerController@destroy']);
     $router->post('/UpdateDataBusinessPartner/{id}', ['uses' => 'BussinessPartnerController@update']);
     $router->get('/DataBusinessPartnerByType/{type}', ['uses' => 'BussinessPartnerController@Partnerbytype']);
+    $router->get('/DataContractor/{id}', ['uses' => 'BussinessPartnerController@DataContractor']);
 
 
     //Personil
@@ -131,6 +132,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
      $router->get('/DataUserPrivilegedByid/{id}', ['uses' => 'UserController@UserPrivilegedByid']);
      $router->delete('/DeleteDataUser/{id}', ['uses' => 'UserController@destroy']);
      $router->post('/UpdateUser/{id}', ['uses' => 'UserController@update']);
+     $router->get('/getUserPrivileged/{id}', ['uses' => 'UserController@getUserPrivileged']);
+
     //Project Number
     $router->get('/DataProjectNumber', ['uses' => 'ProjectNumberController@index']);
     $router->post('/InsertProjectNumber', ['uses' => 'ProjectNumberController@create']);
@@ -152,14 +155,16 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataRiskManagementByid/{id}', ['uses' => 'RiskManagementController@show']);
 
     //BaselineBOQ
-    $router->get('/DataBoq', ['uses' => 'BaselineBoqController@index']);
+    $router->get('/DataBoq/{id}/{projectid}', ['uses' => 'BaselineBoqController@index']);
+    $router->get('/DataBoqLevel/{id}/{itemid}/{projectid}', ['uses' => 'BaselineBoqController@DataBoqLevel']);
     $router->post('/InsertDataBoq', ['uses' => 'BaselineBoqController@create']);
     $router->get('/DataBoqByid/{id}', ['uses' => 'BaselineBoqController@show']);
     $router->delete('/DeleteBoq/{id}', ['uses' => 'BaselineBoqController@destroy']);
     $router->post('/UpdateBoq/{id}', ['uses' => 'BaselineBoqController@update']);
     $router->post('/UpdateBoqChildParentLevel/{id}', ['uses' => 'BaselineBoqController@UpdateBoqChildParentLevel']);
     $router->get('/DataBoqchild/{id}', ['uses' => 'BaselineBoqController@DataBoqchild']);
-    $router->get('/getAllBoq', ['uses' => 'BaselineBoqController@getAllBoq']);
+    $router->get('/getAllBoq/{contractorID}/{projectID}', ['uses' => 'BaselineBoqController@getAllBoq']);
+    $router->get('/getWeightBoq/{projectid}/{contractorid}', ['uses' => 'BaselineBoqController@getWeightBoq']);
 
     $router->get('/DataBoqHistory', ['uses' => 'HistoryBoqController@index']);
     $router->post('/InsertDataBoqHistory', ['uses' => 'HistoryBoqController@create']);
@@ -184,7 +189,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('/DeleteDataActualWbs/{id}', ['uses' => 'ActualWbsController@destroy']);
     $router->post('/UpdateDataActualWbs{id}', ['uses' => 'ActualWbsController@update']);
     $router->get('/DataActualWbschild/{id}', ['uses' => 'ActualWbsController@DataActualWbschild']);
-    $router->get('/getAllDataActualWbs', ['uses' => 'ActualWbsController@getAllDataActualWbs']);
+    $router->get('/getAllDataActualWbs/{contractorID}/{projectID}', ['uses' => 'ActualWbsController@getAllDataActualWbs']);
     //MobilizationDate
     $router->get('/DataMobilizationDate', ['uses' => 'MobilizationDateController@index']);
     $router->post('/InsertMobilizationDate', ['uses' => 'MobilizationDateController@create']);
@@ -232,4 +237,32 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('/DeleteMobilizationDate/{id}', ['uses' => 'MobilizationDateController@destroy']);
     $router->get('/DataMobilizationDateByid/{id}', ['uses' => 'MobilizationDateController@show']);
     $router->post('/UpdateMobilizationDate/{id}', ['uses' => 'MobilizationDateController@update']);
+
+    //baseline wbs
+    $router->get('/DataWbs/{id}/{projectid}', ['uses' => 'BaselineWbsController@index']);
+    $router->get('/DataWbsLevel/{id}/{itemid}/{projectid}', ['uses' => 'BaselineWbsController@DataWbsLevel']);
+    $router->post('/InsertDataWbs', ['uses' => 'BaselineWbsController@create']);
+    $router->get('/DataWbsByid/{id}', ['uses' => 'BaselineWbsController@show']);
+    $router->delete('/DeleteWbs/{id}', ['uses' => 'BaselineWbsController@destroy']);
+    $router->post('/UpdateWbs/{id}', ['uses' => 'BaselineWbsController@update']);
+    $router->post('/UpdateWbsChildParentLevel/{id}', ['uses' => 'BaselineWbsController@UpdateWbsChildParentLevel']);
+    $router->get('/DataWbschild/{id}', ['uses' => 'BaselineWbsController@DataWbschild']);
+    $router->get('/getAllWbs/{contractorID}/{projectID}', ['uses' => 'BaselineWbsController@getAllWbs']);
+    $router->get('/getWeightWbs/{projectid}/{contractorid}', ['uses' => 'BaselineWbsController@getWeightWbs']);
+    $router->get('/getBaselineChart/{projectid}/{contractorid}', ['uses' => 'BaselineWbsController@getBaselineChart']);
+
+    $router->get('/DataCurrentWbs/{id}/{projectid}', ['uses' => 'CurrentWbsController@index']);
+    $router->get('/DataCurrentWbsLevel/{id}/{itemid}/{projectid}', ['uses' => 'CurrentWbsController@DataWbsLevel']);
+    $router->post('/InsertDataCurrentWbs', ['uses' => 'CurrentWbsController@create']);
+    $router->get('/DataCurrentWbsByid/{id}', ['uses' => 'CurrentWbsController@show']);
+    $router->delete('/DeleteCurrentWbs/{id}', ['uses' => 'CurrentWbsController@destroy']);
+    $router->post('/UpdateCurrentWbs/{id}', ['uses' => 'CurrentWbsController@update']);
+    $router->post('/UpdateCurrentWbsChildParentLevel/{id}', ['uses' => 'CurrentWbsController@UpdateWbsChildParentLevel']);
+    $router->get('/DataCurrentWbschild/{id}', ['uses' => 'CurrentWbsController@DataWbschild']);
+    $router->get('/getAllCurrentWbs/{contractorID}/{projectID}', ['uses' => 'CurrentWbsController@getAllCurrentWbs']);
+    $router->get('/getWeightCurrentWbs/{projectid}/{contractorid}', ['uses' => 'CurrentWbsController@getWeightWbs']);
+    $router->get('/getCurrentWbsChart/{projectid}/{contractorid}', ['uses' => 'CurrentWbsController@getCurrentWbsChart']);
+
+    $router->post('/InsertDataCurrentWbsHistory', ['uses' => 'WbsHistoryController@create']);
+
 });

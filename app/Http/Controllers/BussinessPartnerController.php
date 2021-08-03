@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\BussinessPartner;
+use App\Models\ProjectNumber;
 use Illuminate\Http\Request;
 
 class BussinessPartnerController extends Controller
@@ -82,9 +83,13 @@ class BussinessPartnerController extends Controller
      * @param  \App\Models\BussinessPartner  $bussinessPartner
      * @return \Illuminate\Http\Response
      */
-    public function edit(BussinessPartner $bussinessPartner)
+    public function DataContractor($id)
     {
-        //
+        return ProjectNumber::where('project_numbers.ProjectID', $id)
+        ->join('projects', 'projects.ProjectID', '=', 'project_numbers.ProjectID')
+        ->join('bussinesspartner', 'bussinesspartner.id', '=', 'project_numbers.BusinessPartnerID')
+        ->select('bussinesspartner.*')
+        ->get();
     }
 
     /**

@@ -35,7 +35,7 @@ class UserController extends Controller
     public function getUser(Request $request)
     {
 
-        $data = DB::select("SELECT *
+        $data = DB::select("SELECT *,a.id as UserID
     FROM
         user a 
         LEFT JOIN personil b ON b.Email = a.UserMail
@@ -44,13 +44,30 @@ class UserController extends Controller
         LEFT JOIN (SELECT * from projects Where setDefault='1') e ON e.ProjectID = d.ProjectID
     WHERE
         a.UserLogin = '".$request->UserLogin."'
-        AND a.password = '".$request->password."'");
+        AND a.password = BINARY '".$request->password."'");
 
         if ($data) {
             return $data;
         } else {
             return response()->json(['status' => 'empty'], 202);
         }
+    }
+
+    public function getUserPrivileged($id)
+    {
+        $data = DB::select("SELECT *
+        FROM
+            user a 
+            LEFT JOIN privilegedname b ON b.id = a.UserProfile
+            LEFT JOIN userprivileged c ON c.PrivilegedNameID = b.id
+        WHERE
+            a.id = '".$id."'");
+    
+            if ($data) {
+                return $data;
+            } else {
+                return response()->json(['status' => 'empty'], 202);
+            }
     }
 
     public function UserPrivilegedByid(Users $Users, $id)

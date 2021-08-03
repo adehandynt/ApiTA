@@ -13,7 +13,7 @@ class BaselineBoqController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id,$projectid)
     {
         //
          //return  DB::select('SELECT * FROM baselineboq ORDER BY COALESCE(parentItem, id), id');
@@ -22,11 +22,26 @@ class BaselineBoqController extends Controller
          left JOIN unit c on c.id=a.unitID
          left JOIN currency d on d.id = a.CurrencyID
         --  where a.hasChild IS NOT NULL AND (a.hasChild != "" OR a.hasChild != 0)
+        where a.ProjectID="'.$projectid.'" AND a.contractorID="'.$id.'"
         ORDER BY a.parentlevel, COALESCE(a.parentItem, a.id), a.level');
     }
-    public function getAllBoq()
+    public function DataBoqLevel($id,$itemid,$projectid)
     {
-    return  BaselineBoq::all();
+        //
+         //return  DB::select('SELECT * FROM baselineboq ORDER BY COALESCE(parentItem, id), id');
+         return  DB::select('SELECT a.*,c.UnitName,d.currencyName
+         FROM baselineboq a
+         left JOIN unit c on c.id=a.unitID
+         left JOIN currency d on d.id = a.CurrencyID
+        --  where a.hasChild IS NOT NULL AND (a.hasChild != "" OR a.hasChild != 0)
+        where a.ProjectID="'.$projectid.'" AND a.contractorID="'.$id.'" AND (a.id="'.$itemid.'" OR a.parentItem="'.$itemid.'")
+        ORDER BY a.parentlevel, COALESCE(a.parentItem, a.id), a.level');
+    }
+    public function getAllBoq($contractorID,$projectID)
+    {
+        $data = BaselineBoq::where([
+            ['contractorID', '=',  $contractorID],['ProjectID', '=',  $projectID]])->get();
+        return response($data);
     }
 
     /**
@@ -101,9 +116,26 @@ class BaselineBoqController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function edit(BaselineBoq $BaselineBoq)
+    public function getWeightBoq($projectid,$contractorid)
     {
-        //
+        return DB::select('SELECT
+        a.id,
+        c.parentID,
+        a.parentItem,
+        a.TotalAmount,
+        a.contractorID,
+        a.ProjectID,
+        b.All_TOTAL,
+        ( a.TotalAmount / b.All_TOTAL )* 100 AS ParentWeight
+    FROM
+        ( SELECT id, parentItem, contractorID, ProjectID, sum( amount ) AS TotalAmount FROM baselineboq WHERE parentItem IS NOT NULL GROUP BY parentItem ) AS a
+        JOIN ( SELECT id, parentItem, sum( amount ) AS All_TOTAL FROM baselineboq) AS b
+        JOIN ( SELECT id AS parentID FROM baselineboq WHERE parentItem IS NULL ) AS c on a.parentItem =c.parentID
+    WHERE
+       a.contractorID = "'.$contractorid.'" 
+        AND a.ProjectID = "'.$projectid.'" 
+    GROUP BY
+        a.id');
     }
 
     /**
