@@ -174,14 +174,14 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/UpdateBoqHistory/{id}', ['uses' => 'HistoryBoqController@update']);
     $router->get('/DataBoqchildHistory/{id}', ['uses' => 'HistoryBoqController@DataBoqchildHistory']);
 
-    $router->get('/DataDocument', ['uses' => 'DocumentsController@index']);
+    $router->get('/DataDocument/{projectID}/{contractorID}', ['uses' => 'DocumentsController@index']);
     $router->post('/InsertDataDocument', ['uses' => 'DocumentsController@create']);
     $router->get('/DataDocumentByid/{id}', ['uses' => 'DocumentsController@show']);
     $router->delete('/DeleteDataDocument/{id}', ['uses' => 'DocumentsController@destroy']);
     $router->post('/UpdateDataDocument/{id}', ['uses' => 'DocumentsController@update']);
 
-    $router->get('/DataActualWbs', ['uses' => 'ActualWbsController@index']);
-    $router->get('/DataActualWbsDetail/{docID}', ['uses' => 'ActualWbsController@DataActualWbsDetail']);
+    $router->get('/DataActualWbs/{contractorID}/{projectID}', ['uses' => 'ActualWbsController@index']);
+    $router->post('/DataActualWbsDetail', ['uses' => 'ActualWbsController@DataActualWbsDetail']);
     $router->get('/GetActualParentItem/{projectID}/{consultantID}', ['uses' => 'ActualWbsController@GetActualParentItem']);
     $router->get('/GetActualChildItem/{projectID}/{consultantID}/{itemID}', ['uses' => 'ActualWbsController@GetActualChildItem']);
     $router->post('/InsertDataActualWbs', ['uses' => 'ActualWbsController@create']);
@@ -189,7 +189,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataDetailActualWbsByid/{id}', ['uses' => 'ActualWbsController@DataDetailActualWbsByid']);
     $router->delete('/DeleteDataActualWbs/{id}', ['uses' => 'ActualWbsController@destroy']);
     $router->post('/UpdateDataActualWbs{id}', ['uses' => 'ActualWbsController@update']);
-    $router->get('/DataActualWbschild/{id}', ['uses' => 'ActualWbsController@DataActualWbschild']);
+    $router->get('/DataActualWbschild/{id}/{contractorID}/{projectID}', ['uses' => 'ActualWbsController@DataActualWbschild']);
     $router->get('/getAllDataActualWbs/{contractorID}/{projectID}', ['uses' => 'ActualWbsController@getAllDataActualWbs']);
     //MobilizationDate
     $router->get('/DataMobilizationDate', ['uses' => 'MobilizationDateController@index']);
@@ -214,7 +214,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->post('/InsertDataStation', ['uses' => 'StationProgressController@create']);
     $router->post('/InsertDataSubItem', ['uses' => 'SubStationProgressController@create']);
-    $router->get('/DataStation', ['uses' => 'StationProgressController@index']);
+    $router->get('/DataStation/{projectID}/{contractorID}', ['uses' => 'StationProgressController@index']);
     $router->get('/DataStationDetail/{id}', ['uses' => 'StationProgressController@show']);
     $router->get('/getSubItem/{id}', ['uses' => 'SubStationProgressController@show']);
     $router->get('/getSubItemTable/{id}', ['uses' => 'SubStationProgressController@getSubItemTable']);
@@ -261,7 +261,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/UpdateCurrentWbsChildParentLevel/{id}', ['uses' => 'CurrentWbsController@UpdateWbsChildParentLevel']);
     $router->get('/DataCurrentWbschild/{id}', ['uses' => 'CurrentWbsController@DataWbschild']);
     $router->get('/getAllCurrentWbs/{contractorID}/{projectID}', ['uses' => 'CurrentWbsController@getAllCurrentWbs']);
-    $router->get('/getWeightCurrentWbs/{projectid}/{contractorid}', ['uses' => 'CurrentWbsController@getWeightWbs']);
+    $router->get('/getWeightCurrentWbs/{projectid}/{contractorid}', ['uses' => 'CurrentWbsController@getWeightActualWbs']);
+    $router->get('/getWeightCurrentWbsByItem/{id}', ['uses' => 'CurrentWbsController@getWeightCurrentWbsByItem']);
     $router->get('/getCurrentWbsChart/{projectid}/{contractorid}', ['uses' => 'CurrentWbsController@getCurrentWbsChart']);
 
     $router->post('/InsertDataCurrentWbsHistory', ['uses' => 'WbsHistoryController@create']);

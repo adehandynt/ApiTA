@@ -14,19 +14,20 @@ class CurrentWbsController extends Controller
         //
         //return  DB::select('SELECT * FROM baseline_wbs ORDER BY COALESCE(parentItem, id), id');
         return  DB::select('SELECT a.*,c.UnitName,d.currencyName
-         FROM baseline_wbs a
+         FROM actual_wbs a
          left JOIN unit c on c.id=a.unitID
          left JOIN currency d on d.id = a.CurrencyID
         --  where a.hasChild IS NOT NULL AND (a.hasChild != "" OR a.hasChild != 0)
         where a.ProjectID="' . $projectid . '" AND a.contractorID="' . $id . '"
         ORDER BY a.parentlevel, COALESCE(a.parentItem, a.id), a.level');
     }
+
     public function DataActualWbsLevel($id, $itemid, $projectid)
     {
         //
         //return  DB::select('SELECT * FROM baseline_wbs ORDER BY COALESCE(parentItem, id), id');
         return  DB::select('SELECT a.*,c.UnitName,d.currencyName
-         FROM baseline_wbs a
+         FROM actual_wbs a
          left JOIN unit c on c.id=a.unitID
          left JOIN currency d on d.id = a.CurrencyID
         --  where a.hasChild IS NOT NULL AND (a.hasChild != "" OR a.hasChild != 0)
@@ -46,13 +47,13 @@ class CurrentWbsController extends Controller
 	a.* FROM
 	( SELECT MONTHNAME(StartDate) AS x ,
 	SUM(amount) AS baseline
-	FROM baseline_wbs 
+	FROM actual_wbs 
 	GROUP BY
 	MONTHNAME(StartDate)
 	UNION 
 	SELECT MONTHNAME(endDate) AS x ,
 	SUM(amount) AS baseline
-	FROM baseline_wbs
+	FROM actual_wbs
 	GROUP BY
 	MONTHNAME(endDate) ) a GROUP BY
 	a.x");
@@ -94,7 +95,7 @@ class CurrentWbsController extends Controller
     {
         //
         return DB::select('SELECT a.*,c.UnitName,d.currencyName
-        FROM baseline_wbs a
+        FROM actual_wbs a
         left JOIN unit c on c.id=a.unitID
         left JOIN currency d on d.id = a.CurrencyID
         where a.id=?', [$id]);
@@ -103,7 +104,7 @@ class CurrentWbsController extends Controller
     public function DataActualWbschild(ActualWbs $ActualWbs, $id)
     {
         return  DB::select('SELECT a.*,c.UnitName,d.currencyName
-         FROM baseline_wbs a
+         FROM actual_wbs a
          left JOIN unit c on c.id=a.unitID
          left JOIN currency d on d.id = a.CurrencyID
          where a.parentItem = ? and (a.hasChild IS NULL or a.hasChild = 0)
@@ -123,12 +124,35 @@ class CurrentWbsController extends Controller
         b.All_TOTAL,
         ( a.TotalAmount / b.All_TOTAL )* 100 AS ParentWeight
     FROM
-        ( SELECT id, parentItem, contractorID, ProjectID, sum( amount ) AS TotalAmount FROM baseline_wbs WHERE parentItem IS NOT NULL GROUP BY parentItem ) AS a
-        JOIN ( SELECT id, parentItem, sum( amount ) AS All_TOTAL FROM baseline_wbs) AS b
-        JOIN ( SELECT id AS parentID FROM baseline_wbs WHERE parentItem IS NULL ) AS c on a.parentItem =c.parentID
+        ( SELECT id, parentItem, contractorID, ProjectID, sum( amount ) AS TotalAmount FROM actual_wbs WHERE parentItem IS NOT NULL GROUP BY parentItem ) AS a
+        JOIN ( SELECT id, parentItem, sum( amount ) AS All_TOTAL FROM actual_wbs) AS b
+        JOIN ( SELECT id AS parentID FROM actual_wbs WHERE parentItem IS NULL ) AS c on a.parentItem =c.parentID
     WHERE
        a.contractorID = "' . $contractorid . '" 
         AND a.ProjectID = "' . $projectid . '" 
+    GROUP BY
+        a.id');
+    }
+
+    
+    public function getWeightCurrentWbsByItem($id)
+    {
+        return DB::select('SELECT
+        a.id,
+        c.parentID,
+        a.parentItem,
+        a.TotalAmount,
+        a.contractorID,
+        a.ProjectID,
+        b.All_TOTAL,
+        ( a.TotalAmount / b.All_TOTAL )* 100 AS ParentWeight
+    FROM
+        ( SELECT id, parentItem, contractorID, ProjectID, sum( amount ) AS TotalAmount FROM actual_wbs WHERE parentItem IS NOT NULL GROUP BY parentItem ) AS a
+        JOIN ( SELECT id, parentItem, sum( amount ) AS All_TOTAL FROM actual_wbs) AS b
+        JOIN ( SELECT id AS parentID FROM actual_wbs WHERE parentItem IS NULL ) AS c on a.parentItem =c.parentID
+    WHERE
+       a.contractorID IN (select contractorID from actual_wbs where id="'.$id.'" group by id) 
+        AND a.ProjectID IN (select ProjectID from actual_wbs where id="'.$id.'" group by id) 
     GROUP BY
         a.id');
     }
@@ -154,11 +178,11 @@ class CurrentWbsController extends Controller
         //
         ActualWbs::where('id', $id)->delete();
         DB::delete('DELETE
-         FROM baseline_wbs
+         FROM actual_wbs
          WHERE parentItem IN
          (
              SELECT parentItem
-             FROM baseline_wbs
+             FROM actual_wbs
              WHERE parentItem = ?
          )', [$id]);
         return response()->json(['status' => 'success'], 200);

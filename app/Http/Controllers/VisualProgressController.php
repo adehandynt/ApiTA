@@ -8,7 +8,7 @@ use DB;
 
 class VisualProgressController extends Controller
 {
-    public function index($projectID,$contractorID)
+    public function index($projectID, $contractorID)
     {
         //
         return  DB::select("SELECT
@@ -21,14 +21,14 @@ class VisualProgressController extends Controller
         LEFT JOIN visual_progress b ON b.itemID = a.id 
         LEFT JOIN visual_progress_image c ON c.visualProgressID = b.id
     WHERE
-        b.projectID = 1 
-        AND b.contractorID = 1
+        b.projectID = '" . $projectID . "'
+        AND b.contractorID = '" . $contractorID . "'
         GROUP BY
         idVisual");
     }
-    
 
-    public function showOtherVisual($projectID,$contractorID)
+
+    public function showOtherVisual($projectID, $contractorID)
     {
         //
         return  DB::select("SELECT
@@ -39,12 +39,13 @@ class VisualProgressController extends Controller
         visual_progress b 
         LEFT JOIN visual_progress_image c ON c.visualProgressID = b.id
     WHERE
-        b.projectID = 1 
-        AND b.contractorID = 1 
+    b.projectID = '" . $projectID . "'
+        AND b.contractorID = '" . $contractorID . "'
         AND b.itemID = 0");
     }
 
-    public function DataVisualProgressDetail($id){
+    public function DataVisualProgressDetail($id)
+    {
         return  DB::select("SELECT
         b.*,
         c.*,
@@ -56,10 +57,11 @@ class VisualProgressController extends Controller
         LEFT JOIN visual_progress b ON b.itemID = a.id 
         LEFT JOIN visual_progress_image c ON c.visualProgressID = b.id
     WHERE
-        b.id= ?",[$id]);
+        b.id= ?", [$id]);
     }
 
-    public function OtherDataVisualProgressDetail($id){
+    public function OtherDataVisualProgressDetail($id)
+    {
         return  DB::select("SELECT
         b.*,
         c.*,
@@ -69,7 +71,7 @@ class VisualProgressController extends Controller
         LEFT JOIN visual_progress b ON b.contractorID = a.id 
         LEFT JOIN visual_progress_image c ON c.visualProgressID = b.id
     WHERE
-        b.id= ?",[$id]);
+        b.id= ?", [$id]);
     }
 
 
@@ -82,17 +84,17 @@ class VisualProgressController extends Controller
     {
         //
         VisualProgress::updateOrCreate([
-            
+
             'itemVisualName'      => $request->itemVisualName,
             'itemID'      => $request->itemID,
             'contractorID'      => $request->contractorID,
             'projectID'      => $request->projectID
 
-            ]);
+        ]);
 
-            return response()->json(['status' => 'success'], 200);
+        return response()->json(['status' => 'success'], 200);
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -138,7 +140,7 @@ class VisualProgressController extends Controller
     public function update(Request $request, $id)
     {
         //
-        VisualProgress::where ('id',$id)->update($request->all());
+        VisualProgress::where('id', $id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -151,7 +153,7 @@ class VisualProgressController extends Controller
     public function destroy($id)
     {
         //
-        VisualProgress::where('id',$id)->delete();
+        VisualProgress::where('id', $id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
 }

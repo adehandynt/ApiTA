@@ -8,7 +8,7 @@ use DB;
 
 class StationProgressController extends Controller
 {
-    public function index()
+    public function index($projectID,$contractorID)
     {
         //
         return  DB::select("SELECT
@@ -20,8 +20,8 @@ class StationProgressController extends Controller
         JOIN station_progress b ON b.itemID = a.id 
         JOIN bussinesspartner c ON c.id = a.contractorID
     WHERE
-        b.ProjectID = 1 
-        AND b.ContractorID = 1 
+        b.ProjectID = '".$projectID."'
+        AND b.ContractorID = '".$contractorID."'
     GROUP BY
         a.itemName");
     }

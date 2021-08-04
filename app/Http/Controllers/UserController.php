@@ -49,7 +49,8 @@ class UserController extends Controller
         if ($data) {
             return $data;
         } else {
-            return response()->json(['status' => 'empty'], 202);
+            
+            return $data;
         }
     }
 
@@ -66,7 +67,7 @@ class UserController extends Controller
         if ($data) {
             return $data;
         } else {
-            return response()->json(['status' => 'empty'], 202);
+            return $data;
         }
     }
 

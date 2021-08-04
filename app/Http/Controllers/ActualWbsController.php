@@ -8,7 +8,7 @@ use App\Models\ActualWbs;
 
 class ActualWbsController extends Controller
 {
-    public function index()
+    public function index($contractorID,$projectID)
     {
         //
         //return  DB::select('SELECT * FROM baselineboq ORDER BY COALESCE(parentItem, id), id');
@@ -28,8 +28,8 @@ FROM
     LEFT JOIN actual_wbs b ON b.ProjectID = a.ProjectID
     LEFT JOIN progress_evaluation c ON c.ItemID = b.id 
 WHERE
-    (a.ProjectID = '1' 
-    AND b.contractorID = '1')
+    (a.ProjectID = '".$projectID."' 
+    AND b.contractorID = '".$contractorID."')
    --  AND
    --  b.hasChild IS NOT NULL 
    --  AND ( b.hasChild != '' OR b.hasChild != 0 ) 
@@ -37,7 +37,7 @@ WHERE
    ORDER BY b.parentlevel, COALESCE(b.parentItem, b.id), b.level");
     }
 
-    public function DataActualWbsDetail($docID)
+    public function DataActualWbsDetail(Request $request)
     {
        return DB::select("SELECT
         b.*,
@@ -53,32 +53,27 @@ WHERE
         SELECT
             sum( c.amount ) 
         FROM
-            projects a
-            LEFT JOIN wbs_history b ON b.ProjectID = a.ProjectID
+           wbs_history b
             LEFT JOIN progress_evaluation c ON c.ItemID = b.actualWbsID 
         WHERE
-        ( a.ProjectID = '1' AND b.contractorID = '1' AND c.docID = ? )) AS totalThisMonth,
+        ( b.ProjectID = '".$request->projectID."' AND b.contractorID = '".$request->contractorID."' AND c.docID = '".$request->docID."'  )) AS totalThisMonth,
         (
         SELECT
             sum( c.accumulatedLastMonthQty * b.price ) 
         FROM
-            projects a
-            LEFT JOIN wbs_history b ON b.ProjectID = a.ProjectID
+            wbs_history b
             LEFT JOIN progress_evaluation c ON c.ItemID = b.actualWbsID 
         WHERE
-        ( a.ProjectID = '1' AND b.contractorID = '1' AND c.docID = ? )) AS totalLastMonth,
+        ( b.ProjectID = '".$request->projectID."' AND b.contractorID = '".$request->contractorID."' AND c.docID = '".$request->docID."'  )) AS totalLastMonth,
         ( SELECT sum( qty * price ) FROM wbs_history ) AS totalEstimated 
     FROM
-        projects a
-        LEFT JOIN wbs_history b ON b.ProjectID = a.ProjectID
+        (SELECT * from wbs_history where ProjectID = '".$request->projectID."' AND contractorID = '".$request->contractorID."' AND created_at LIKE '".$request->date."%' ) b
         LEFT JOIN progress_evaluation c ON c.ItemID = b.actualWbsID 
     WHERE
-        ( a.ProjectID = '1' AND b.contractorID = '1' AND c.docID = ? ) --  AND
-    --  b.hasChild IS NOT NULL
-    --  AND ( b.hasChild != '' OR b.hasChild != 0 )
-        
-    GROUP BY
-        b.id ", [$docID,$docID,$docID]);
+        ( c.docID = '".$request->docID."' )
+	
+GROUP BY
+	 c.created_at,b.id, b.actualWbsID");
     }
 
     public function getAllDataActualWbs($contractorID,$projectID)
@@ -148,7 +143,7 @@ WHERE
         where a.id=?', [$id]);
     }
 
-    public function DataActualWbschild(ActualWbs $ActualWbs, $id)
+    public function DataActualWbschild(ActualWbs $ActualWbs, $id,$contractorID,$projectID)
     {
         return  DB::select('SELECT
         b.*,
@@ -164,9 +159,9 @@ WHERE
         projects a
         LEFT JOIN actual_wbs b ON b.ProjectID = a.ProjectID
         LEFT JOIN progress_evaluation c ON c.ProjectID = a.ProjectID
-         where  (a.ProjectID = "1"
-         AND b.contractorID = "1") and b.parentItem = ? and (b.hasChild IS NULL or b.hasChild = 0)
-         ORDER BY COALESCE(b.parentItem, b.id), b.id', [$id]);
+         where  (a.ProjectID = "'.$projectID.'"
+         AND b.contractorID = "'.$contractorID.'") and b.parentItem = "'.$id.'" and (b.hasChild IS NULL or b.hasChild = 0)
+         ORDER BY COALESCE(b.parentItem, b.id), b.id');
     }
 
     public function DataDetailActualWbsByid(ActualWbs $ActualWbs, $id)
@@ -186,7 +181,7 @@ WHERE
         projects a
         LEFT JOIN actual_wbs b ON b.ProjectID = a.ProjectID
         LEFT JOIN progress_evaluation c ON c.ProjectID = a.ProjectID
-         where  b.id = ? ', [$id]);
+         where  b.id = "'.$id.'"', [$id]);
     }
 
     public function GetActualParentItem(ActualWbs $ActualWbs, $projectID, $consultantID)

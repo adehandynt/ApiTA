@@ -21,8 +21,8 @@ class VisualProgressImageController extends Controller
         LEFT JOIN visual_progress b ON b.itemID = a.id 
         LEFT JOIN visual_progress_image c ON c.visualProgressID = b.id
     WHERE
-        b.projectID = 1 
-        AND b.contractorID = 1");
+         b.projectID = '".$projectID."'
+        AND b.contractorID = '".$contractorID."'");
     }
     
 
@@ -36,8 +36,8 @@ class VisualProgressImageController extends Controller
         visual_progress b 
         LEFT JOIN visual_progress_image c ON c.visualProgressID = b.id
     WHERE
-        b.projectID = 1 
-        AND b.contractorID = 1 
+        b.projectID = '".$projectID."' 
+        AND b.contractorID = '".$contractorID."' 
         AND b.itemID = 0");
     }
 

@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Documents;
-
+use DB;
 class DocumentsController extends Controller
 {
-    public function index()
+    public function index($projectID, $contractorID)
     {
         //
-        return Documents::all();
+        return DB::select('SELECT a.*,d.Userfullname
+        FROM documents a join projects b on b.ProjectID=a.ProjectID
+        join project_numbers c on c.ProjectID = b.ProjectID
+        join user d on d.id = a.author
+        where c.ProjectID="'.$projectID.'" AND c.BusinessPartnerID="'.$contractorID.'"');
     }
 
     /**
