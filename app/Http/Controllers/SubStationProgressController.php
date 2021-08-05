@@ -75,11 +75,11 @@ class SubStationProgressController extends Controller
 
     public function getSubItemTable(SubStationProgress $SubStationProgress, $id){
         return  DB::select("SELECT
-        b.*
+        b.*,c.completedStatus,c.stationID
     FROM
         actual_wbs a
         JOIN station_progress b ON b.ItemID = a.id
-        JOIN sub_station_progress c ON c.parentID = b.itemID 
+        LEFT JOIN sub_station_progress c ON c.parentID = b.itemID 
     WHERE
         c.parentID = ? 
     GROUP BY

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use DB;
 
 class ProjectController extends Controller
 {
@@ -147,5 +148,18 @@ class ProjectController extends Controller
         Project::where('ProjectID',$id)->delete();
         response()->json(['status' => 'success'], 200);
         
+    }
+
+    public function GetDataProjectOwner(){
+       return DB::select("SELECT a.* from bussinesspartner a 
+       join bussiness_types b on b.id=a.BussinessTypeID where a.BussinessTypeID=3");
+    }
+
+    public function getProjectManagerOwner($id){
+        return DB::select("SELECT c.* from bussinesspartner a 
+        join bussiness_types b on b.id=a.BussinessTypeID 
+        join personil c on c.BussinessPartnerID=a.id
+        join position d on d.id=c.PositionID
+        where a.BussinessTypeID=3 and a.id='".$id."' and PositionName like '%Project Manager%' "); 
     }
 }

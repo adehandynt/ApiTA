@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Documents;
+use App\Models\DocumentDetail;
 use DB;
 class DocumentsController extends Controller
 {
@@ -33,11 +34,38 @@ class DocumentsController extends Controller
             'author'      => $request->author,
             'status'      => $request->status,
             'desc'      => $request->desc,
-            'projectID'      => $request->projectID
+            'ProjectID'      => $request->projectID
 
         ]);
 
         return response()->json(['status' => 'success','doc_insert_id' => $data->id], 200);
+    }
+
+    public function createDocumentDetail(Request $request)
+    {
+        //
+        $data = DocumentDetail::Create([
+            'actualWbsID' => $request->actualWbsID,
+            'itemName'      => $request->itemName,
+            'parentItem'      => $request->parentItem,
+            'hasChild'      => $request->hasChild,
+            'qty'      => $request->qty,
+            'price'      => $request->price,
+            'startDate'      => $request->startDate,
+            'endDate'      => $request->endDate,
+            'amount'      => $request->amount,
+            'weight'      => $request->weight,
+            'ProjectID'      => $request->ProjectID,
+            'unitID'      => $request->unitID,
+            'contractorID'      => $request->contractorID,
+            'CurrencyID'      => $request->CurrencyID,
+            'level' => $request->level,
+            'parentlevel' => $request->parentlevel,
+            'Created_By'    => $request->Created_By
+
+            ]);
+
+            return response()->json(['status' => 'success','last_insert_id' => $data->id], 200);
     }
 
     /**

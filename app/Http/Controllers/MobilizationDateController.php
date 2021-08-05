@@ -21,7 +21,7 @@ class MobilizationDateController extends Controller
         ->join('personil','mobilization_dates.PersonilID','=','personil.id')
         ->join('positioncategory','mobilization_dates.PositionCatID','=','positioncategory.id')
         ->join('position','mobilization_dates.PositionID','=','position.id')
-        ->select('mobilization_dates.*','bussinesspartner.BussinessName','positioncategory.CategoryName', 'position.PositionName')
+        ->select('mobilization_dates.*','bussinesspartner.BussinessName','positioncategory.CategoryName', 'position.PositionName','personil.PersonilName')
         ->get();
     }
 
@@ -143,5 +143,17 @@ class MobilizationDateController extends Controller
         // ->select('positioncategory.CategoryName')
         // ->get();
         // return response($data);
+    }
+
+    public function DataMobilizationPositionCat($id){
+        return DB::select("select a.* from positioncategory a
+        join position b on b.PositionCatID = a.id
+        join personil c on c.PositionID=b.id
+        where c.id = '".$id."' ");
+    }
+    public function DataMobilizationPosition($id){
+        return DB::select("select b.* from positioncategory a
+        join position b on b.PositionCatID = a.id
+        where a.id = '".$id."' ");
     }
 }

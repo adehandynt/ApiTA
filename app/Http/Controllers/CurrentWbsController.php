@@ -41,22 +41,77 @@ class CurrentWbsController extends Controller
         return response($data);
     }
 
-    public function getCurrentWbsChart()
+    public function DataWbschild(ActualWbs $BaselineWbs, $id)
+    {
+        return  DB::select('SELECT a.*,c.UnitName,d.currencyName
+         FROM actual_wbs a
+         left JOIN unit c on c.id=a.unitID
+         left JOIN currency d on d.id = a.CurrencyID
+         where a.parentItem = ? and (a.hasChild IS NULL or a.hasChild = 0)
+         ORDER BY COALESCE(a.parentItem, a.id), a.id', [$id]);
+    }
+
+    public function getCurrentWbsChart($projectid,$contractorid)
     {
         return  DB::select("SELECT
-	a.* FROM
-	( SELECT MONTHNAME(StartDate) AS x ,
-	SUM(amount) AS baseline
-	FROM actual_wbs 
-	GROUP BY
-	MONTHNAME(StartDate)
-	UNION 
-	SELECT MONTHNAME(endDate) AS x ,
-	SUM(amount) AS baseline
-	FROM actual_wbs
-	GROUP BY
-	MONTHNAME(endDate) ) a GROUP BY
-	a.x");
+        	a.*, b.actual
+    FROM
+        (
+        SELECT
+            MONTHNAME( StartDate ) AS x,
+            SUM( amount ) AS baseline,
+            MONTH ( StartDate ) AS month_num 
+        FROM
+            baseline_wbs 
+        WHERE
+            amount IS NOT NULL 
+            AND ProjectID = '".$projectid."'
+            AND contractorID = '".$contractorid."'
+        GROUP BY
+            MONTHNAME( StartDate ) UNION
+        SELECT
+            MONTHNAME( endDate ) AS x,
+            SUM( amount ) AS baseline,
+            MONTH ( endDate ) AS month_num 
+        FROM
+            baseline_wbs 
+        WHERE
+            amount IS NOT NULL 
+            AND ProjectID = '".$projectid."'
+            AND contractorID = '".$contractorid."'
+        GROUP BY
+            MONTHNAME( endDate ) 
+        ) a join 
+        (
+            SELECT
+                MONTHNAME( StartDate ) AS x,
+                SUM( amount ) AS actual,
+                MONTH ( StartDate ) AS month_num 
+            FROM
+                actual_wbs 
+            WHERE
+                amount IS NOT NULL 
+                AND ProjectID = '".$projectid."'
+                AND contractorID = '".$contractorid."'
+            GROUP BY
+                MONTHNAME( StartDate ) UNION
+            SELECT
+                MONTHNAME( endDate ) AS x,
+                SUM( amount ) AS actual,
+                MONTH ( endDate ) AS month_num 
+            FROM
+                actual_wbs 
+            WHERE
+                amount IS NOT NULL 
+                AND ProjectID = '".$projectid."'
+                AND contractorID = '".$contractorid."'
+            GROUP BY
+                MONTHNAME( endDate ) 
+            ) b on b.x=a.x
+    GROUP BY
+        a.x 
+    ORDER BY
+        a.month_num");
     }
 
     public function create(Request $request)

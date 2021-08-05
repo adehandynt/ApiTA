@@ -44,22 +44,41 @@ class BaselineWbsController extends Controller
         return response($data);
     }
 
-    public function getBaselineChart()
+    public function getBaselineChart($projectid,$contractorid)
     {
         return  DB::select("SELECT
-	a.* FROM
-	( SELECT MONTHNAME(StartDate) AS x ,
-	SUM(amount) AS baseline
-	FROM baseline_wbs 
-	GROUP BY
-	MONTHNAME(StartDate)
-	UNION 
-	SELECT MONTHNAME(endDate) AS x ,
-	SUM(amount) AS baseline
-	FROM baseline_wbs
-	GROUP BY
-	MONTHNAME(endDate) ) a GROUP BY
-	a.x");
+        a.* 
+    FROM
+        (
+        SELECT
+            MONTHNAME( StartDate ) AS x,
+            SUM( amount ) AS baseline,
+            MONTH ( StartDate ) AS month_num 
+        FROM
+            baseline_wbs 
+        WHERE
+            amount IS NOT NULL 
+            AND ProjectID = '".$projectid."'
+            AND contractorID = '".$contractorid."'
+        GROUP BY
+            MONTHNAME( StartDate ) UNION
+        SELECT
+            MONTHNAME( endDate ) AS x,
+            SUM( amount ) AS baseline,
+            MONTH ( endDate ) AS month_num 
+        FROM
+            baseline_wbs 
+        WHERE
+            amount IS NOT NULL 
+            AND ProjectID = '".$projectid."'
+            AND contractorID = '".$contractorid."'
+        GROUP BY
+            MONTHNAME( endDate ) 
+        ) a 
+    GROUP BY
+        a.x 
+    ORDER BY
+        month_num");
     }
 
     /**
@@ -72,16 +91,21 @@ class BaselineWbsController extends Controller
         //
         $data = BaselineWbs::updateOrCreate([
 
+            'ProjectID'      => $request->ProjectID,
+            'contractorID'      => $request->contractorID,
             'itemName'      => $request->itemName,
+        ],[
+
+            
             'parentItem'      => $request->parentItem,
             'hasChild'      => $request->hasChild,
             'qty'      => $request->qty,
             'price'      => $request->price,
+            'startDate'      => $request->startDate,
+            'endDate'      => $request->endDate,
             'amount'      => $request->amount,
             'weight'      => $request->weight,
-            'ProjectID'      => $request->ProjectID,
             'unitID'      => $request->unitID,
-            'contractorID'      => $request->contractorID,
             'CurrencyID'      => $request->CurrencyID,
             'level' => $request->level,
             'parentlevel' => $request->parentlevel,

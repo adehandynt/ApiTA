@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ActualWbs;
+use App\Models\PerformanceAnalysis;
 use DB;
 
 class PerformanceAnalysisController extends Controller
@@ -22,10 +23,21 @@ class PerformanceAnalysisController extends Controller
     public function create(Request $request)
     {
         //
-        ActualWbs::updateOrCreate([
-            
-            'unitName'      => $request->unitName,
-            'unitSymbol'      => $request->unitSymbol]);
+        PerformanceAnalysis::updateOrCreate([
+            'itemID' => $request->itemID,
+            'AC' => $request->AC,
+            'PC' => $request->PC,
+            'EV' => $request->EV,
+            'CV' => $request->CV,
+            'SV' => $request->SV,
+            'CPI' => $request->CPI,
+            'SPI' => $request->SPI,
+            'EAC1' => $request->EAC1,
+            'EAC2' => $request->EAC2,
+            'EAC3' => $request->EAC3,
+            'EAC4' => $request->EAC4,
+            'docID' => $request->docID
+        ]);
 
             return response()->json(['status' => 'success'], 200);
     }

@@ -141,7 +141,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataProjectnumberByid/{id}', ['uses' => 'ProjectNumberController@show']);
 
     //Contractor Equipment 
-    $router->get('/DataContractorEquipment', ['uses' => 'ContractorEquipmentController@index']);
+    $router->get('/DataContractorEquipment/{id}', ['uses' => 'ContractorEquipmentController@index']);
     $router->post('/InsertContractorEquipment', ['uses' => 'ContractorEquipmentController@create']);
     $router->delete('/DeleteContractorEquipment/{id}', ['uses' => 'ContractorEquipmentController@destroy']);
     $router->post('/UpdateContractorEquipment/{id}', ['uses' => 'ContractorEquipmentController@update']);
@@ -195,6 +195,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataMobilizationDate', ['uses' => 'MobilizationDateController@index']);
     $router->post('/InsertMobilizationDate', ['uses' => 'MobilizationDateController@create']);
     $router->get('/DataMobilizationDateByBusinessPartner/{BusinessPartner}', ['uses' => 'MobilizationDateController@byBusinessPartner']);
+    $router->get('/DataMobilizationPositionCat/{id}', ['uses' => 'MobilizationDateController@DataMobilizationPositionCat']);
+    $router->get('/DataMobilizationPosition/{id}', ['uses' => 'MobilizationDateController@DataMobilizationPosition']);
 
     $router->get('/DataProgressEvaluation', ['uses' => 'ProgressEvaluationController@index']);
     $router->post('/InsertDataProgressEvaluation', ['uses' => 'ProgressEvaluationController@create']);
@@ -207,10 +209,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataWbsHistoryByid/{id}', ['uses' => 'WbsHistoryController@show']);
     $router->delete('/DeleteDataWbsHistory/{id}', ['uses' => 'WbsHistoryController@destroy']);
 
-    $router->get('/DataDocument', ['uses' => 'DocumentsController@index']);
+    $router->get('/DataDocument/{projectID}/{contractorID}', ['uses' => 'DocumentsController@index']);
     $router->post('/InsertDataDocument', ['uses' => 'DocumentsController@create']);
     $router->get('/DataDocumentByid/{id}', ['uses' => 'DocumentsController@show']);
     $router->delete('/DeleteDataDocument/{id}', ['uses' => 'DocumentsController@destroy']);
+    $router->post('/InsertDataDocumentDetail', ['uses' => 'DocumentsController@createDocumentDetail']);
 
     $router->post('/InsertDataStation', ['uses' => 'StationProgressController@create']);
     $router->post('/InsertDataSubItem', ['uses' => 'SubStationProgressController@create']);
@@ -225,6 +228,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('/DeleteStation/{id}', ['uses' => 'StationProgressController@destroy']);
     
     $router->post('/InsertVisualProgress', ['uses' => 'VisualProgressController@create']);
+    $router->post('/EditVisualProgress/{id}', ['uses' => 'VisualProgressController@update']);
     $router->post('/InsertVisualProgressImage', ['uses' => 'VisualProgressImageController@create']);
     $router->get('/DataVisualProgress/{projectID}/{contractorID}', ['uses' => 'VisualProgressController@index']);
     $router->get('/OtherDataVisualProgress/{projectID}/{contractorID}', ['uses' => 'VisualProgressController@showOtherVisual']);
@@ -233,7 +237,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('/DeleteImage/{id}', ['uses' => 'VisualProgressImageController@destroy']);
     $router->delete('/DeleteVisual/{id}', ['uses' => 'VisualProgressController@destroy']);
     $router->get('/getPerformance/{projectId}/{contractorId}', ['uses' => 'PerformanceAnalysisController@getPerformance']);
-  
+    $router->post('/InsertPerformance', ['uses' => 'PerformanceAnalysisController@create']);
 
     $router->delete('/DeleteMobilizationDate/{id}', ['uses' => 'MobilizationDateController@destroy']);
     $router->get('/DataMobilizationDateByid/{id}', ['uses' => 'MobilizationDateController@show']);
@@ -266,5 +270,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/getCurrentWbsChart/{projectid}/{contractorid}', ['uses' => 'CurrentWbsController@getCurrentWbsChart']);
 
     $router->post('/InsertDataCurrentWbsHistory', ['uses' => 'WbsHistoryController@create']);
+    $router->get('/GetDataProjectOwner', ['uses' => 'ProjectController@GetDataProjectOwner']);
+    $router->get('/GetDataProjectManagerOwner/{id}', ['uses' => 'ProjectController@getProjectManagerOwner']);
+    
 
 });

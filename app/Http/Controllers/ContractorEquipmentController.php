@@ -12,12 +12,12 @@ class ContractorEquipmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
         //
         
 
-        return ContractorEquipment::join('bussinesspartner', 'contractor_equipment.BusinessPartnerID', '=', 'bussinesspartner.id')
+        return ContractorEquipment::where('contractor_equipment.BusinessPartnerID', $id)->join('bussinesspartner', 'contractor_equipment.BusinessPartnerID', '=', 'bussinesspartner.id')
         ->join('unit', 'contractor_equipment.UnitID', '=', 'unit.id')
         ->join('projects', 'contractor_equipment.ProjectID', '=', 'projects.ProjectID')
         ->select('contractor_equipment.*','projects.ProjectID','bussinesspartner.BussinessName', 'unit.unitName')
