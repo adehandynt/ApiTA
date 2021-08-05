@@ -226,7 +226,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/updateStation/{id}', ['uses' => 'StationProgressController@update']);
     $router->delete('/DeleteSubItem/{id}', ['uses' => 'SubStationProgressController@destroy']);
     $router->delete('/DeleteStation/{id}', ['uses' => 'StationProgressController@destroy']);
-    
+
     $router->post('/InsertVisualProgress', ['uses' => 'VisualProgressController@create']);
     $router->post('/EditVisualProgress/{id}', ['uses' => 'VisualProgressController@update']);
     $router->post('/InsertVisualProgressImage', ['uses' => 'VisualProgressImageController@create']);
@@ -238,6 +238,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('/DeleteVisual/{id}', ['uses' => 'VisualProgressController@destroy']);
     $router->get('/getPerformance/{projectId}/{contractorId}', ['uses' => 'PerformanceAnalysisController@getPerformance']);
     $router->post('/InsertPerformance', ['uses' => 'PerformanceAnalysisController@create']);
+
 
     $router->delete('/DeleteMobilizationDate/{id}', ['uses' => 'MobilizationDateController@destroy']);
     $router->get('/DataMobilizationDateByid/{id}', ['uses' => 'MobilizationDateController@show']);
@@ -274,4 +275,17 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/GetDataProjectManagerOwner/{id}', ['uses' => 'ProjectController@getProjectManagerOwner']);
     
 
+    //weather info
+    $router->get('/weatherInfo', 'WeatherInfoController@index');
+    $router->post('/weatherInfo', 'WeatherInfoController@store');
+    $router->get('/weatherInfo/{id}', 'WeatherInfoController@show');
+    $router->delete('/weatherInfo/{id}', 'WeatherInfoController@destroy');
+    $router->post('/weatherInfo/{id}', 'WeatherInfoController@update');
+
+    //issue management
+    $router->get('/issue', 'IssueManagementController@index');
+    $router->post('/issue', 'IssueManagementController@store');
+    $router->get('/issue/{id}', 'IssueManagementController@show');
+    $router->delete('/issue/{id}', 'IssueManagementController@destroy');
+    $router->post('/issue/{id}', 'IssueManagementController@update');
 });

@@ -21,14 +21,14 @@ class DocumentsTable extends Migration
             $table->integer('author')->unsigned();
             $table->string('status')->nullable();
             $table->text('desc')->nullable();
-        
-            
+
+
             $table->integer('ProjectID')->nullable()->unsigned();
-        
+
             $table->foreign('ProjectID')
             ->nullable()->constrained()
             ->references('ProjectID')
-            ->on('Projects')
+            ->on('projects')
             ->onUpdate('cascade')
             ->onDelete('cascade');
             $table->timestamps();

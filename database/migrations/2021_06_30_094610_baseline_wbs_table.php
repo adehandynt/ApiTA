@@ -20,25 +20,25 @@ class BaselineWbsTable extends Migration
             $table->date('endDate');
             $table->integer('amount')->nullable();
             $table->double('weight', 15, 8)->nullable();
-            
+
             $table->integer('ProjectID')->nullable()->unsigned();
             $table->bigInteger('unitID')->nullable()->unsigned();
             $table->bigInteger('contractorID')->nullable()->unsigned();
             $table->bigInteger('CurrencyID')->nullable()->unsigned();
             $table->integer('level');
             $table->integer('parentLevel');
-            
+
             $table->foreign('CurrencyID')
             ->nullable()->constrained()
             ->references('id')
-            ->on('currency')
+            ->on('Currency')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
             $table->foreign('ProjectID')
             ->nullable()->constrained()
             ->references('ProjectID')
-            ->on('Projects')
+            ->on('projects')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
@@ -48,7 +48,7 @@ class BaselineWbsTable extends Migration
             ->on('unit')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-            
+
             $table->foreign('contractorID')
             ->nullable()->constrained()->references('id')
             ->on('BussinessPartner')

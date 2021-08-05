@@ -23,11 +23,11 @@ class ProgressEvaluationTable extends Migration
             $table->integer('accumulatedThisMonthQty');
             $table->integer('amount')->nullable();
             $table->double('weight', 15, 8)->nullable();
-        
+
             $table->bigInteger('contractorID')->nullable()->unsigned();
             $table->integer('ProjectID')->nullable()->unsigned();
-            $table->integer('ItemID')->nullable()->unsigned();
-            $table->integer('docID')->nullable()->unsigned();
+            $table->bigInteger('ItemID')->nullable()->unsigned();
+            $table->bigInteger('docID')->nullable()->unsigned();
 
             $table->foreign('ItemID')
             ->nullable()->constrained()
@@ -40,11 +40,11 @@ class ProgressEvaluationTable extends Migration
             ->on('documents')
             ->onUpdate('cascade')
             ->onDelete('cascade');
-        
+
             $table->foreign('ProjectID')
             ->nullable()->constrained()
             ->references('ProjectID')
-            ->on('Projects')
+            ->on('projects')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 

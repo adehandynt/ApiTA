@@ -18,14 +18,14 @@ class CreateRiskManagementTable extends Migration
             $table->string('DescriptionRisk');
             $table->integer('ProjectID')->unsigned();
             $table->bigInteger('PersonilID')->unsigned();
-            $table->foreign('ProjectID')->references('ProjectID')->on('Projects')->onUpdate('cascade')
+            $table->foreign('ProjectID')->references('ProjectID')->on('projects')->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->foreign('PersonilID')->references('id')->on('personil')->onUpdate('cascade')
+            $table->foreign('PersonilID')->references('id')->on('Personil')->onUpdate('cascade')
             ->onDelete('cascade');
             $table->string('Rank');
             $table->date('DueDateRisk');
             $table->string('Mitigation');
-           
+
             $table->timestamps();
         });
     }

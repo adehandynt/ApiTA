@@ -14,20 +14,20 @@ class CreateContractorEquipmentTable extends Migration
     public function up()
     {
         Schema::create('contractor_equipment', function (Blueprint $table) {
-            
+
             $table->id();
             $table->string('EquipmentName');
             $table->integer('ProjectID')->unsigned();
             $table->bigInteger('BusinessPartnerID')->unsigned();
             $table->integer('UnitID')->unsigned();
-            $table->foreign('ProjectID')->references('ProjectID')->on('Projects')->onUpdate('cascade')
+            $table->foreign('ProjectID')->references('ProjectID')->on('projects')->onUpdate('cascade')
             ->onDelete('cascade');
-            $table->foreign('BusinessPartnerID')->references('id')->on('bussinesspartner')->onUpdate('cascade')
+            $table->foreign('BusinessPartnerID')->references('id')->on('BussinessPartner')->onUpdate('cascade')
             ->onDelete('cascade');
             $table->date('MobilizationDate');
             $table->date('DemobilizationDate');
-           
-            
+
+
 
             $table->timestamps();
         });
