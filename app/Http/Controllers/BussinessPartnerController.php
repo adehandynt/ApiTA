@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BussinessPartner;
 use App\Models\ProjectNumber;
 use Illuminate\Http\Request;
+use DB;
 
 class BussinessPartnerController extends Controller
 {
