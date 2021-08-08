@@ -15,7 +15,7 @@ class CityController extends Controller
     public function index()
     {
         //
-        return City:: join('Country', 'city.CountryID', '=', 'country.id')
+        return City:: join('country', 'city.CountryID', '=', 'country.id')
         ->select('country.CountryName', 'city.CityName', 'city.id')
         ->get();
     }
