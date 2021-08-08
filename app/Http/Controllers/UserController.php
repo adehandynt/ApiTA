@@ -49,8 +49,7 @@ class UserController extends Controller
         if ($data) {
             return $data;
         } else {
-            
-            return $data;
+            return response()->json(['status' => 'empty'], 202);
         }
     }
 
@@ -67,7 +66,7 @@ class UserController extends Controller
         if ($data) {
             return $data;
         } else {
-            return $data;
+            return response()->json(['status' => 'empty'], 202);
         }
     }
 
@@ -100,11 +99,18 @@ class UserController extends Controller
     public function show(Users $Users, $id)
     {
         //
-        $data = Users::where('user.id', $id)->join('privilegedname', 'privilegedname.id', '=', 'user.UserProfile')
-            ->join('userprivileged', 'userprivileged.PrivilegedNameID', '=', 'privilegedname.id')
-            ->select('privilegedname.PrivilegedName', 'user.*')->groupBy('user.UserProfile')
-            ->get();
-        return response($data);
+        return  DB::select("SELECT
+        a.*,
+        b.PrivilegedName 
+        from user a join privilegedname b on b.id = a.UserProfile
+        join userprivileged c on c.PrivilegedNameID = b.id
+        where a.id = '".$id."'");
+
+        // $data = Users::where('user.id', $id)->join('privilegedname', 'privilegedname.id', '=', 'user.UserProfile')
+        //     ->join('userprivileged', 'userprivileged.PrivilegedNameID', '=', 'privilegedname.id')
+        //     ->select('privilegedname.PrivilegedName', 'user.*')->groupBy('user.UserProfile')
+        //     ->get();
+        // return response($data);
     }
     public function edit(Users $Users)
     {
