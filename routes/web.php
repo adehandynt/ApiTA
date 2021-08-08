@@ -87,6 +87,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/UpdateDataPersonil/{id}', ['uses' => 'PersonilController@update']);
     $router->get('/DataPersonilbyPosition/{PositionID}', ['uses' => 'PersonilController@PersonilbyPosition']);
     $router->get('/DataPersonilbyPartner/{BussinessPartnerID}', ['uses' => 'PersonilController@PersonilbyPartner']);
+    $router->get('/DataPersonilbyPartnerProject/{id}', ['uses' => 'PersonilController@PersonilbyPartnerProject']);
 
     //currency
     $router->get('/DataCurrency', ['uses' => 'CurrencyController@index']);
@@ -174,7 +175,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/UpdateBoqHistory/{id}', ['uses' => 'HistoryBoqController@update']);
     $router->get('/DataBoqchildHistory/{id}', ['uses' => 'HistoryBoqController@DataBoqchildHistory']);
 
-    $router->get('/DataDocument/{projectID}/{contractorID}', ['uses' => 'DocumentsController@index']);
+    $router->get('/DataDocument/{projectID}/{contractorID}/{type}', ['uses' => 'DocumentsController@index']);
     $router->post('/InsertDataDocument', ['uses' => 'DocumentsController@create']);
     $router->get('/DataDocumentByid/{id}', ['uses' => 'DocumentsController@show']);
     $router->delete('/DeleteDataDocument/{id}', ['uses' => 'DocumentsController@destroy']);
@@ -219,10 +220,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/InsertDataSubItem', ['uses' => 'SubStationProgressController@create']);
     $router->get('/DataStation/{projectID}/{contractorID}', ['uses' => 'StationProgressController@index']);
     $router->get('/DataStationDetail/{id}', ['uses' => 'StationProgressController@show']);
+    $router->get('/getStationByParent/{id}', ['uses' => 'StationProgressController@getStationByParent']);
     $router->get('/getSubItem/{id}', ['uses' => 'SubStationProgressController@show']);
     $router->get('/getSubItemTable/{id}', ['uses' => 'SubStationProgressController@getSubItemTable']);
     $router->get('/getSubItemRowTable/{id}', ['uses' => 'SubStationProgressController@getSubItemRowTable']);
-    $router->post('/UpdateSubItem/{id}', ['uses' => 'SubStationProgressController@update']);
+    $router->get('/getCompSubItemTable/{id}', ['uses' => 'SubStationProgressController@getCompSubItemTable']);
+    $router->post('/UpdateSubItem/{id}/{stationID}', ['uses' => 'SubStationProgressController@update']);
     $router->post('/updateStation/{id}', ['uses' => 'StationProgressController@update']);
     $router->delete('/DeleteSubItem/{id}', ['uses' => 'SubStationProgressController@destroy']);
     $router->delete('/DeleteStation/{id}', ['uses' => 'StationProgressController@destroy']);
@@ -255,10 +258,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataWbschild/{id}', ['uses' => 'BaselineWbsController@DataWbschild']);
     $router->get('/getAllWbs/{contractorID}/{projectID}', ['uses' => 'BaselineWbsController@getAllWbs']);
     $router->get('/getWeightWbs/{projectid}/{contractorid}', ['uses' => 'BaselineWbsController@getWeightWbs']);
+    $router->get('/getWeightBaselineWbsByItem/{id}', ['uses' => 'BaselineWbsController@getWeightBaselineWbsByItem']);
     $router->get('/getBaselineChart/{projectid}/{contractorid}', ['uses' => 'BaselineWbsController@getBaselineChart']);
 
     $router->get('/DataCurrentWbs/{id}/{projectid}', ['uses' => 'CurrentWbsController@index']);
-    $router->get('/DataCurrentWbsLevel/{id}/{itemid}/{projectid}', ['uses' => 'CurrentWbsController@DataWbsLevel']);
+    $router->get('/DataCurrentWbsLevel/{id}/{itemid}/{projectid}', ['uses' => 'CurrentWbsController@DataActualWbsLevel']);
     $router->post('/InsertDataCurrentWbs', ['uses' => 'CurrentWbsController@create']);
     $router->get('/DataCurrentWbsByid/{id}', ['uses' => 'CurrentWbsController@show']);
     $router->delete('/DeleteCurrentWbs/{id}', ['uses' => 'CurrentWbsController@destroy']);
@@ -288,4 +292,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/issue/{id}', 'IssueManagementController@show');
     $router->delete('/issue/{id}', 'IssueManagementController@destroy');
     $router->post('/issue/{id}', 'IssueManagementController@update');
+
+    //progress report
+    $router->get('/detailProject/{projectID}/{contractorID}', 'ProgressReportController@getProject');
+    $router->post('/getScheduledProgress','ProgressReportController@getScheduledProgress');
+    $router->post('/getActualProgress','ProgressReportController@getActualProgress');
+    $router->post('/getIssue','ProgressReportController@getIssue');
+    $router->get('/riskReport/{projectID}/{contractorID}','ProgressReportController@riskReport');
 });

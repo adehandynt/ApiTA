@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Currency extends Model
 {
     //  
-    protected $table = 'Currency';
+    protected $table = 'currency';
     protected $primarykey='id';
     protected $fillable = ['CountryID','CurrencyName'];
 }

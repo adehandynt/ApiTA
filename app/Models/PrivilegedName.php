@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PrivilegedName extends Model
 {
     //
-    protected $table='PrivilegedName';
+    protected $table='privilegedname';
     protected $primarykey='id';
     protected $fillable = ['PrivilegedName'];
     

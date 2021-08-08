@@ -70,27 +70,41 @@ class SubStationProgressController extends Controller
             actual_wbs a
             JOIN sub_station_progress b ON b.ItemID = a.id 
         WHERE
-             b.parentID  = ?", [$id]);
+             b.parentID  = ?
+             group by b.ItemID", [$id]);
     }
 
     public function getSubItemTable(SubStationProgress $SubStationProgress, $id){
         return  DB::select("SELECT
-        b.*,c.completedStatus,c.stationID
+        b.*,c.completedStatus,c.stationID,c.id as idSubItem
     FROM
         actual_wbs a
         JOIN station_progress b ON b.ItemID = a.id
-        LEFT JOIN sub_station_progress c ON c.parentID = b.itemID 
+        JOIN sub_station_progress c ON c.parentID = b.itemID 
     WHERE
         c.parentID = ? 
     GROUP BY
         b.id ", [$id]);
     }
 
+    public function getCompSubItemTable(SubStationProgress $SubStationProgress, $id){
+        return  DB::select("SELECT
+        b.*,c.completedStatus,c.stationID,c.id as idSubItem,
+        c.itemID as itemID2
+    FROM
+        actual_wbs a
+        JOIN station_progress b ON b.ItemID = a.id
+        JOIN sub_station_progress c ON c.stationID = b.id 
+    WHERE
+        c.parentID = ? and completedStatus=1", [$id]);
+    }
+
     public function getSubItemRowTable(SubStationProgress $SubStationProgress, $id){
         return  DB::select("SELECT
         c.*,
         a.itemName,
-        b.id as idSubItem
+        b.id as idSubItem,
+        b.itemID as itemID2
     FROM
         actual_wbs a
         JOIN sub_station_progress b ON b.ItemID = a.id
@@ -119,10 +133,10 @@ class SubStationProgressController extends Controller
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $stationID)
     {
         //
-        SubStationProgress::where('id', $id)->update($request->all());
+        SubStationProgress::where(['itemID'=>$id,'stationID'=>$stationID])->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 

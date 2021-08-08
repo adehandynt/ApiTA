@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Personil;
 use Illuminate\Http\Request;
+use DB;
 
 class PersonilController extends Controller
 {
@@ -131,4 +132,17 @@ class PersonilController extends Controller
 
         
     }
+
+    public function PersonilbyPartnerProject($id)
+    {
+        //
+        return DB::select('SELECT a.* from personil a 
+        join bussinesspartner b on b.id = a.BussinessPartnerID
+        join project_numbers c on c.BusinessPartnerID=b.id
+        where c.ProjectID="'.$id.'" and b.BussinessTypeID=1');
+
+        
+    }
+
+    
 }

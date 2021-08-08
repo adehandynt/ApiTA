@@ -17,7 +17,13 @@ class ActualWbsController extends Controller
 c.periode,
 c.progressName,
 c.estimatedQty,
-c.accumulatedLastMonthQty,
+(select sum(c.amount)FROM
+    projects a
+    LEFT JOIN actual_wbs b ON b.ProjectID = a.ProjectID
+    LEFT JOIN progress_evaluation c ON c.ItemID = b.id 
+WHERE
+    (a.ProjectID = '" . $projectID . "' 
+    AND b.contractorID = '" . $contractorID . "')) as TotalaccumulatedLastMonthQty,
 c.thisMonthQty,
 c.accumulatedThisMonthQty,
 c.amount as actualAmount,
@@ -56,7 +62,7 @@ WHERE
         document_detail b
             LEFT JOIN progress_evaluation c ON c.ItemID = b.actualWbsID 
         WHERE
-        ( b.ProjectID = '" . $request->projectID . "' AND b.contractorID = '" . $request->contractorID . "' AND c.docID = '" . $request->docID . "' AND c.created_at LIKE '" . $request->date . "%' )) AS totalThisMonth,
+        ( b.ProjectID = '" . $request->projectID . "' AND b.contractorID = '" . $request->contractorID . "' AND c.docID = '" . $request->docID . "' AND b.created_at LIKE '" . $request->date . "%' )) AS totalThisMonth,
         (
         SELECT
             sum( c.accumulatedLastMonthQty * b.price ) 
@@ -64,7 +70,7 @@ WHERE
         document_detail b
             LEFT JOIN progress_evaluation c ON c.ItemID = b.actualWbsID 
         WHERE
-        ( b.ProjectID = '" . $request->projectID . "' AND b.contractorID = '" . $request->contractorID . "' AND c.docID = '" . $request->docID . "'  AND c.created_at LIKE '" . $request->date . "%' )) AS totalLastMonth,
+        ( b.ProjectID = '" . $request->projectID . "' AND b.contractorID = '" . $request->contractorID . "' AND c.docID = '" . $request->docID . "'  AND b.created_at LIKE '" . $request->date . "%' )) AS totalLastMonth,
         ( SELECT sum( qty * price ) FROM baseline_wbs ) AS totalEstimated 
     FROM
         (SELECT * from document_detail where ProjectID = '" . $request->projectID . "' AND contractorID = '" . $request->contractorID . "' AND created_at LIKE '" . $request->date . "%' ) b

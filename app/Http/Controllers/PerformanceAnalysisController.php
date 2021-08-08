@@ -70,18 +70,15 @@ class PerformanceAnalysisController extends Controller
         return  DB::select("SELECT
         a.*,
         b.*,
-        round(( a.ev / b.ACC_TOTAL_PLANNED_COST ),2) AS SPI,
-	round(( a.EV - b.ACC_TOTAL_PLANNED_COST ),2) AS SV,
-        ( SELECT sum( qty * price ) AS ACC_TOTAL_PLANNED_COST FROM actual_wbs WHERE parentItem IS NOT NULL AND ( ProjectID = ".$projectId." AND contractorID = ".$contractorId." ) ) AS BAC,
-        (
-            a.TOTAL_ACTUAL_COST +(
-                b.ACC_TOTAL_PLANNED_COST - a.EV 
-            )) AS EAC1,
-        COALESCE ( round(( a.TOTAL_ACTUAL_COST +(( b.ACC_TOTAL_PLANNED_COST - a.EV )/ a.CPI )), 2 ), 0 ) AS EAC3,
-        COALESCE (
-            round(( a.TOTAL_ACTUAL_COST +(( b.ACC_TOTAL_PLANNED_COST - a.EV )/ a.CPI /( a.ev / b.ACC_TOTAL_PLANNED_COST ))), 2 ),
-            0 
-        ) AS EAC4 
+
+				(a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) AS EV,
+				round(( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) / b.ACC_TOTAL_PLANNED_COST ),2) AS SPI,
+				round(( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) - b.ACC_TOTAL_PLANNED_COST ),2) AS SV,
+				(a.TOTAL_ACTUAL_COST +(b.ACC_TOTAL_PLANNED_COST - (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST))) AS EAC1,
+				COALESCE ( round(( a.TOTAL_ACTUAL_COST +(( b.ACC_TOTAL_PLANNED_COST - (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) )/ ( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) / a.TOTAL_ACTUAL_COST ) )), 2 ), 0 ) AS EAC3,
+				COALESCE ( round(( a.TOTAL_ACTUAL_COST +(( b.ACC_TOTAL_PLANNED_COST - (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) )/ ( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) / a.TOTAL_ACTUAL_COST ) /( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) / b.ACC_TOTAL_PLANNED_COST ))), 2 ), 0 ) AS EAC4,
+				( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) - a.TOTAL_ACTUAL_COST ) AS CV,
+				( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) / a.TOTAL_ACTUAL_COST ) AS CPI
     FROM
         (
         SELECT
@@ -98,9 +95,10 @@ class PerformanceAnalysisController extends Controller
             b.accumulatedThisMonthQty,
             b.TOTAL_ACTUAL_COST,
             b.thisMonthQty,
-            c.EV,
-            ( c.EV - b.TOTAL_ACTUAL_COST ) AS CV,
-            ( c.EV / b.TOTAL_ACTUAL_COST ) AS CPI 
+            c.EARN_PERCENT
+-- 						,
+--             ( c.EARN_PERCENT - b.TOTAL_ACTUAL_COST ) AS CV,
+--             ( c.EARN_PERCENT / b.TOTAL_ACTUAL_COST ) AS CPI 
         FROM
             actual_wbs a
             JOIN (
@@ -110,10 +108,11 @@ class PerformanceAnalysisController extends Controller
                 b.accumulatedLastMonthQty,
                 b.accumulatedThisMonthQty,
                 b.thisMonthQty,
-                SUM( a.amount ) AS TOTAL_ACTUAL_COST 
+                SUM( b.amount ) AS TOTAL_ACTUAL_COST 
             FROM
                 actual_wbs a
                 JOIN progress_evaluation b ON b.ItemID = a.id 
+								INNER JOIN ( SELECT docID FROM progress_evaluation WHERE ProjectID = ".$projectId." AND contractorID = ".$contractorId." ORDER BY docID DESC LIMIT 1 ) c ON c.docID = b.docID
             WHERE
                 a.parentItem IS NOT NULL 
                 AND ( a.ProjectID = ".$projectId." AND a.contractorID = ".$contractorId." ) 
@@ -123,10 +122,13 @@ class PerformanceAnalysisController extends Controller
             JOIN (
             SELECT
                 a.parentItem,
-                COALESCE ( SUM( b.amount ), 0 ) AS EV 
+--                 COALESCE ( SUM( b.amount ), 0 ) AS EV 
+ 								sum(b.weight ),
+(sum(b.weight)/100) as EARN_PERCENT
             FROM
                 actual_wbs a
                 LEFT JOIN progress_evaluation b ON b.ItemID = a.id 
+-- 								INNER JOIN ( SELECT docID FROM progress_evaluation WHERE ProjectID = ".$projectId." AND contractorID = ".$contractorId." ORDER BY docID DESC LIMIT 1 ) c ON c.docID = b.docID
                 -- 		AND a.weight = b.weight 
             WHERE
                 a.parentItem IS NOT NULL 

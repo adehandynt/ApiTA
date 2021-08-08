@@ -14,7 +14,8 @@ class StationProgressController extends Controller
         return  DB::select("SELECT
         a.*,
         b.description,
-        c.BussinessName 
+        c.BussinessName,
+        b.id as idStation
     FROM
         actual_wbs a
         JOIN station_progress b ON b.itemID = a.id 
@@ -70,6 +71,12 @@ class StationProgressController extends Controller
         ->join('actual_wbs', 'station_progress.itemID', '=', 'actual_wbs.id')
         ->select('station_progress.*','bussinesspartner.BussinessName','actual_wbs.itemName')
         ->groupBy('actual_wbs.itemName')
+        ->get();
+        return response($data);
+    }
+
+    public function getStationByParent($id){
+        $data = StationProgress::where('station_progress.itemID', $id)
         ->get();
         return response($data);
     }
