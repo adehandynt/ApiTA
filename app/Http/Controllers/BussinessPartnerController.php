@@ -70,7 +70,7 @@ class BussinessPartnerController extends Controller
     public function show(BussinessPartner $bussinessPartner, $id)
     {
         //
-        $data = BussinessPartner::where('BussinessPartner.id', $id)->join('bussiness_types', 'bussinesspartner.BussinessTypeID', '=', 'Bussiness_types.id')
+        $data = BussinessPartner::where('bussinesspartner.id', $id)->join('bussiness_types', 'bussinesspartner.BussinessTypeID', '=', 'Bussiness_types.id')
         ->join('country','bussinesspartner.CountryID','=','Country.id')
         ->join('city','bussinesspartner.CityID','=','city.id')
         ->select('bussinesspartner.*', 'country.CountryName','city.CityName', 'bussiness_types.BussinessTypeName')
