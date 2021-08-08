@@ -71,7 +71,7 @@ class BussinessPartnerController extends Controller
     {
         //
         $data = BussinessPartner::where('bussinesspartner.id', $id)->join('bussiness_types', 'bussinesspartner.BussinessTypeID', '=', 'Bussiness_types.id')
-        ->join('country','bussinesspartner.CountryID','=','Country.id')
+        ->join('country','bussinesspartner.CountryID','=','country.id')
         ->join('city','bussinesspartner.CityID','=','city.id')
         ->select('bussinesspartner.*', 'country.CountryName','city.CityName', 'bussiness_types.BussinessTypeName')
         ->get();
