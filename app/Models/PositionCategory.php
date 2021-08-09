@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PositionCategory extends Model
 {
     //
-    protected $table='PositionCategory';
+    protected $table='positioncategory';
     protected $primarykey='id';
     protected $fillable = ['CategoryName','CategoryDesc'];
 }

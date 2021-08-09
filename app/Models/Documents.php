@@ -9,5 +9,5 @@ class Documents extends Model
     //
     protected $table = 'documents';
     protected $primarykey='id';
-    protected $fillable = ['documentName','documentType','size','author','status','desc','ProjectID'];
+    protected $fillable = ['documentName','documentType','size','author','status','desc','ProjectID','contractorID','reportingDate'];
 }

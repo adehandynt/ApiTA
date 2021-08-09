@@ -181,6 +181,28 @@ class BaselineWbsController extends Controller
         a.id');
     }
 
+    public function getWeightBaselineWbsByItem($id)
+    {
+        return DB::select('SELECT
+        a.id,
+        c.parentID,
+        a.parentItem,
+        a.TotalAmount,
+        a.contractorID,
+        a.ProjectID,
+        b.All_TOTAL,
+        ( a.TotalAmount / b.All_TOTAL )* 100 AS ParentWeight
+    FROM
+        ( SELECT id, parentItem, contractorID, ProjectID, sum( amount ) AS TotalAmount FROM baseline_wbs WHERE parentItem IS NOT NULL GROUP BY parentItem ) AS a
+        JOIN ( SELECT id, parentItem, sum( amount ) AS All_TOTAL FROM baseline_wbs) AS b
+        JOIN ( SELECT id AS parentID FROM baseline_wbs WHERE parentItem IS NULL ) AS c on a.parentItem =c.parentID
+    WHERE
+       a.contractorID IN (select contractorID from baseline_wbs where id="'.$id.'" group by id) 
+        AND a.ProjectID IN (select ProjectID from baseline_wbs where id="'.$id.'" group by id) 
+    GROUP BY
+        a.id');
+    }
+
     /**
      * Update the specified resource in storage.
      *

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BussinessPartner;
 use App\Models\ProjectNumber;
 use Illuminate\Http\Request;
+use DB;
 
 class BussinessPartnerController extends Controller
 {
@@ -16,10 +17,10 @@ class BussinessPartnerController extends Controller
     public function index()
     {
         //
-        return BussinessPartner::  join('Bussiness_types', 'BussinessPartner.BussinessTypeID', '=', 'Bussiness_types.id')
-        ->join('Country','BussinessPartner.CountryID','=','Country.id')
-        ->join('City','BussinessPartner.CityID','=','City.id')
-        ->select('BussinessPartner.*', 'Country.CountryName','City.CityName', 'Bussiness_types.BussinessTypeName')
+        return BussinessPartner::  join('bussiness_types', 'bussinesspartner.BussinessTypeID', '=', 'bussiness_types.id')
+        ->join('country','bussinesspartner.CountryID','=','country.id')
+        ->join('city','bussinesspartner.CityID','=','city.id')
+        ->select('bussinesspartner.*', 'country.CountryName','city.CityName', 'bussiness_types.BussinessTypeName')
         ->get();
     }
 
@@ -69,10 +70,10 @@ class BussinessPartnerController extends Controller
     public function show(BussinessPartner $bussinessPartner, $id)
     {
         //
-        $data = BussinessPartner::where('BussinessPartner.id', $id)->join('Bussiness_types', 'BussinessPartner.BussinessTypeID', '=', 'Bussiness_types.id')
-        ->join('Country','BussinessPartner.CountryID','=','Country.id')
-        ->join('City','BussinessPartner.CityID','=','City.id')
-        ->select('BussinessPartner.*', 'Country.CountryName','City.CityName', 'Bussiness_types.BussinessTypeName')
+        $data = BussinessPartner::where('bussinesspartner.id', $id)->join('bussiness_types', 'bussinesspartner.BussinessTypeID', '=', 'bussiness_types.id')
+        ->join('country','bussinesspartner.CountryID','=','country.id')
+        ->join('city','bussinesspartner.CityID','=','city.id')
+        ->select('bussinesspartner.*', 'country.CountryName','city.CityName', 'bussiness_types.BussinessTypeName')
         ->get();
         return response($data);
     }

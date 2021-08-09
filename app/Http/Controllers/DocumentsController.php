@@ -8,14 +8,16 @@ use App\Models\DocumentDetail;
 use DB;
 class DocumentsController extends Controller
 {
-    public function index($projectID, $contractorID)
+    public function index($projectID, $contractorID, $type)
     {
         //
         return DB::select('SELECT a.*,d.Userfullname
         FROM documents a join projects b on b.ProjectID=a.ProjectID
         join project_numbers c on c.ProjectID = b.ProjectID
         join user d on d.id = a.author
-        where c.ProjectID="'.$projectID.'" AND c.BusinessPartnerID="'.$contractorID.'"');
+        where c.ProjectID="'.$projectID.'" AND a.contractorID="'.$contractorID.'" 
+        AND c.BusinessPartnerID="'.$contractorID.'" 
+        AND a.documentType Like "'.$type.'%"');
     }
 
     /**
@@ -34,7 +36,9 @@ class DocumentsController extends Controller
             'author'      => $request->author,
             'status'      => $request->status,
             'desc'      => $request->desc,
-            'ProjectID'      => $request->projectID
+            'ProjectID'      => $request->projectID,
+            'contractorID' => $request->contractorID,
+            'reportingDate'      => $request->reportingDate
 
         ]);
 

@@ -11,8 +11,8 @@ class UserPrivilegedController extends Controller
     public function index()
     {
         //
-        return UserPrivileged:: join('privilegedname', 'UserPrivileged.PrivilegedNameID', '=', 'privilegedname.id')
-        ->select('privilegedname.PrivilegedName', 'UserPrivileged.*')
+        return UserPrivileged:: join('privilegedname', 'userprivileged.PrivilegedNameID', '=', 'privilegedname.id')
+        ->select('privilegedname.PrivilegedName', 'userprivileged.*')
         ->get();
     }
 
