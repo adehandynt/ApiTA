@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateIssueManagementTable extends Migration
+class CreateMonthlyMeetingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,14 @@ class CreateIssueManagementTable extends Migration
      */
     public function up()
     {
-        Schema::create('issue_management', function (Blueprint $table) {
+        Schema::create('monthly_meeting', function (Blueprint $table) {
             $table->id();
             $table->integer('ProjectID')->nullable()->unsigned();
-            $table->date('raised_date');
-            $table->integer('initiated_by')->unsigned();
-            $table->integer('assign_to')->unsigned();
-            $table->text('description');
-            $table->string('priority');
-            $table->string('status');
-            $table->date('due_date');
-            $table->date('closed_date')->nullable();
-            $table->text('resolution')->nullable();
+            $table->date('meeting_date');
+            $table->text('subject');
+            $table->text('agenda');
+            $table->text('file');
+            $table->text('attendee');
             $table->timestamps();
 
             $table->foreign('ProjectID')
@@ -43,6 +39,6 @@ class CreateIssueManagementTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('issue_management');
+        Schema::dropIfExists('monthly_meeting');
     }
 }
