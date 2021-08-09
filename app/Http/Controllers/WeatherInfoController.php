@@ -14,7 +14,7 @@ class WeatherInfoController extends Controller
      */
     public function index()
     {
-        return WeatherInfo::get();
+        return WeatherInfo::leftJoin('weather','weather.id','weather_info.condition')->get();
     }
 
     /**
