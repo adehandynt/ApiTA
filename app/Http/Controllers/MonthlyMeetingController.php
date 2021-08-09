@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\WeatherInfo;
+use App\Models\MonthlyMeeting;
+use Illuminate\Support\Str;
 
-class WeatherInfoController extends Controller
+class MonthlyMeetingController extends Controller
 {
-    /**
+        /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        return WeatherInfo::leftJoin('weather','weather.id','weather_info.condition')->get();
+        return MonthlyMeeting::get();
     }
 
     /**
@@ -27,12 +28,17 @@ class WeatherInfoController extends Controller
     {
         $inp = $request->all();
 
+        $b64 = $inp['file'];  // your base64 encoded
+        $name = Str::random(10) . '.pdf';
+        $file = file_put_contents($name, base64_decode($b64));
+
         if($inp) {
-            $dbs = new WeatherInfo();
+            $dbs = new MonthlyMeeting();
 
             foreach($inp as $key => $row){
                 $dbs->$key = $inp[$key];
             }
+            $dbs->file = $name;
 
             if($dbs->save())
                 return json_encode(array('status' => 'ok;', 'text' => ''));
@@ -50,7 +56,7 @@ class WeatherInfoController extends Controller
      */
     public function show($id)
     {
-        return WeatherInfo::find($id)->toJson();
+        return MonthlyMeeting::find($id)->toJson();
     }
 
     /**
@@ -62,10 +68,21 @@ class WeatherInfoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $dbs = WeatherInfo::find($request->id);
 
-            $inp = $request->post('edit');
+        try {
+            $dbs = MonthlyMeeting::find($request->id);
+
+            $inp = $request->all();
+
+            if (!empty($inp['file'])) {
+                $b64 = $inp['file'];  // your base64 encoded
+                $name = Str::random(10) . '.pdf';
+                $file = file_put_contents($name, base64_decode($b64));
+                $inp['file'] = $name;
+            }else{
+                array_filter($inp);
+            }
+
             if($inp){
                 foreach($inp as $key => $row){
                     $dbs->$key = $inp[$key];
@@ -89,7 +106,7 @@ class WeatherInfoController extends Controller
      */
     public function destroy($id)
     {
-        $deleted = WeatherInfo::destroy($id);
+        $deleted = MonthlyMeeting::destroy($id);
 
         if($deleted)
             return json_encode(array('status' => 'ok;', 'text' => ''));

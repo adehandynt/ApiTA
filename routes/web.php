@@ -141,7 +141,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/InsertProjectNumber', ['uses' => 'ProjectNumberController@create']);
     $router->get('/DataProjectnumberByid/{id}', ['uses' => 'ProjectNumberController@show']);
 
-    //Contractor Equipment 
+    //Contractor Equipment
     $router->get('/DataContractorEquipment/{id}', ['uses' => 'ContractorEquipmentController@index']);
     $router->post('/InsertContractorEquipment', ['uses' => 'ContractorEquipmentController@create']);
     $router->delete('/DeleteContractorEquipment/{id}', ['uses' => 'ContractorEquipmentController@destroy']);
@@ -277,7 +277,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/InsertDataCurrentWbsHistory', ['uses' => 'WbsHistoryController@create']);
     $router->get('/GetDataProjectOwner', ['uses' => 'ProjectController@GetDataProjectOwner']);
     $router->get('/GetDataProjectManagerOwner/{id}', ['uses' => 'ProjectController@getProjectManagerOwner']);
-    
+
 
     //weather info
     $router->get('/weatherInfo', 'WeatherInfoController@index');
@@ -293,6 +293,13 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('/issue/{id}', 'IssueManagementController@destroy');
     $router->post('/issue/{id}', 'IssueManagementController@update');
 
+    //monthly meeting
+    $router->get('/meeting', 'MonthlyMeetingController@index');
+    $router->post('/meeting', 'MonthlyMeetingController@store');
+    $router->get('/meeting/{id}', 'MonthlyMeetingController@show');
+    $router->delete('/meeting/{id}', 'MonthlyMeetingController@destroy');
+    $router->post('/meeting/{id}', 'MonthlyMeetingController@update');
+  
     //progress report
     $router->get('/detailProject/{projectID}/{contractorID}', 'ProgressReportController@getProject');
     $router->post('/getScheduledProgress','ProgressReportController@getScheduledProgress');
