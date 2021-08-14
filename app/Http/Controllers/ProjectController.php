@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use DB;
 
 class ProjectController extends Controller
 {
@@ -69,7 +71,10 @@ class ProjectController extends Controller
     public function show(Project $project, $id)
     {
         //
-        $data = Project::where('ProjectID', $id)->get();
+        $data = Project::where('ProjectID', $id)
+        ->join('currency','projects.CurrencyType','=','currency.id')
+        ->select('projects.*', 'currency.CurrencyName')
+        ->get();
         return response($data);
     }
 
@@ -100,6 +105,38 @@ class ProjectController extends Controller
         
     }
 
+    public function updateSetDefault(Request $request, $id)
+    {
+        //
+        Project::where ('setDefault','1')->update(array('setDefault'=>'0'));
+        Project::where ('ProjectID',$id)->update(array('setDefault'=>'1'));
+        return response()->json(['status' => 'success'], 200);
+
+        
+    }
+
+
+    public function GetProjectsetDefault(Request $request)
+    {
+        //
+        $data = Project::where('SetDefault','1')
+        ->first('ProjectID');
+        return response($data);
+
+        
+    }
+
+    public function getLastProjectID()
+    {
+        //
+        $data = Project::max('ProjectID');
+        // Log::info("last_id", $data);
+        return response($data);
+        
+    }
+
+    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -109,7 +146,20 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         Project::where('ProjectID',$id)->delete();
-        return response()->json(['status' => 'success'], 200);
+        response()->json(['status' => 'success'], 200);
         
+    }
+
+    public function GetDataProjectOwner(){
+       return DB::select("SELECT a.* from bussinesspartner a 
+       join bussiness_types b on b.id=a.BussinessTypeID where a.BussinessTypeID=3");
+    }
+
+    public function getProjectManagerOwner($id){
+        return DB::select("SELECT c.* from bussinesspartner a 
+        join bussiness_types b on b.id=a.BussinessTypeID 
+        join personil c on c.BussinessPartnerID=a.id
+        join position d on d.id=c.PositionID
+        where a.BussinessTypeID=3 and a.id='".$id."' and PositionName like '%Project Manager%' "); 
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Personil;
 use Illuminate\Http\Request;
+use DB;
 
 class PersonilController extends Controller
 {
@@ -115,4 +116,33 @@ class PersonilController extends Controller
         Personil::where('id',$id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
+
+    public function PersonilbyPosition($PositionID)
+    {
+        //
+        $data =  Personil::where('PositionID', $PositionID)->get();
+        return response($data);
+    }
+
+    public function PersonilbyPartner($BussinessPartnerID)
+    {
+        //
+        $data =  Personil::where('BussinessPartnerID', $BussinessPartnerID)->get();
+        return response($data);
+
+        
+    }
+
+    public function PersonilbyPartnerProject($id)
+    {
+        //
+        return DB::select('SELECT a.* from personil a 
+        join bussinesspartner b on b.id = a.BussinessPartnerID
+        join project_numbers c on c.BusinessPartnerID=b.id
+        where c.ProjectID="'.$id.'" and b.BussinessTypeID=1');
+
+        
+    }
+
+    
 }
