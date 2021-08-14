@@ -20,10 +20,10 @@ class CreateProjectsTable extends Migration
             $table->string('ProjectDesc');
             $table->string('ProjectManager');
             $table->integer('ContractAmount');
-            $table->integer('Length');
-            $table->date('CommencementDate');
-            $table->date('CompletionDate');
-            $table->integer('ProjectDuration');
+            $table->integer('Length')->nullable();
+            $table->date('CommencementDate')->nullable();
+            $table->date('CompletionDate')->nullable();
+            $table->integer('ProjectDuration')->nullable();
             $table->integer('setDefault')->default('0');
             $table->string('CurrencyType');
 
