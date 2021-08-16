@@ -73,16 +73,73 @@ class ProjectNumberController extends Controller
      * @param  \App\Models\ProjectNumber  $projectNumber
      * @return \Illuminate\Http\Response
      */
-    public function show(ProjectNumber $ProjectNumber, $id)
+    public function showContractor(ProjectNumber $ProjectNumber, $id)
     {
         //
         $data = ProjectNumber::where('ProjectID' , $id)
+        ->where('BussinessTypeID', 1)
         // ->join('projects','project_numbers.ProjectID','=','projects.ProjectID')
         ->join('bussinesspartner','project_numbers.BusinessPartnerID','=','bussinesspartner.id')
-        ->select('project_numbers.*','bussinesspartner.BussinessName')
+        ->join('personil','bussinesspartner.id','=','personil.BussinessPartnerID')
+        ->select('project_numbers.*','bussinesspartner.BussinessName','personil.PersonilName')
         ->get();
         return response($data);
     }
+
+    public function showConsultant(ProjectNumber $ProjectNumber, $id)
+    {
+        //
+        $data = ProjectNumber::where('ProjectID' , $id)
+        ->where('BussinessTypeID', 2)
+        // ->join('projects','project_numbers.ProjectID','=','projects.ProjectID')
+        ->join('bussinesspartner','project_numbers.BusinessPartnerID','=','bussinesspartner.id')
+        ->join('personil','bussinesspartner.id','=','personil.BussinessPartnerID')
+        ->select('project_numbers.*','bussinesspartner.BussinessName','personil.PersonilName')
+        ->get();
+        return response($data);
+    }
+
+    public function getProjectIDConsultant(ProjectNumber $ProjectNumber, $id)
+    {
+        //
+        $data = ProjectNumber::where('ProjectID' , $id)
+        ->where('BussinessTypeID', 2)
+        // ->join('projects','project_numbers.ProjectID','=','projects.ProjectID')
+        ->join('bussinesspartner','project_numbers.BusinessPartnerID','=','bussinesspartner.id')
+        
+        ->select('project_numbers.ProjectID')
+        ->get();
+        return response($data);
+    }
+    
+    public function getProjectIDConContractor(ProjectNumber $ProjectNumber, $id)
+    {
+        //
+        $data = ProjectNumber::where('ProjectID' , $id)
+        ->where('BussinessTypeID', 1)
+        // ->join('projects','project_numbers.ProjectID','=','projects.ProjectID')
+        ->join('bussinesspartner','project_numbers.BusinessPartnerID','=','bussinesspartner.id')
+        
+        ->select('project_numbers.ProjectID')
+        ->get();
+        return response($data);
+    }
+    
+    public function getLastProjectNumber()
+    {
+        //
+        $data = ProjectNumber::max('ContractNumber');
+        // Log::info("last_id", $data);
+        // ->select('project_numbers.ContractNumber')
+        // ->get();
+        return response($data);
+        
+    }
+
+
+    
+
+    
 
     /**
      * Show the form for editing the specified resource.

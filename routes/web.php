@@ -139,8 +139,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     //Project Number
     $router->get('/DataProjectNumber', ['uses' => 'ProjectNumberController@index']);
     $router->post('/InsertProjectNumber', ['uses' => 'ProjectNumberController@create']);
-    $router->get('/DataProjectnumberByid/{id}', ['uses' => 'ProjectNumberController@show']);
-
+    $router->get('/DataProjectnumberByid/{id}', ['uses' => 'ProjectNumberController@showConsultant']);
+    $router->get('/DataProjectnumberByidContractor/{id}', ['uses' => 'ProjectNumberController@showContractor']);
+    $router->get('/DataLastProjectnumber', ['uses' => 'ProjectNumberController@getLastProjectNumber']);
+    $router->get('/getProjectIDConsultant/{id}', ['uses' => 'ProjectNumberController@getProjectIDConsultant']);
+    $router->get('/getProjectIDConContractor/{id}', ['uses' => 'ProjectNumberController@getProjectIDConContractor']);
+    
     //Contractor Equipment
     $router->get('/DataContractorEquipment/{id}', ['uses' => 'ContractorEquipmentController@index']);
     $router->post('/InsertContractorEquipment', ['uses' => 'ContractorEquipmentController@create']);

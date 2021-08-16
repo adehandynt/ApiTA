@@ -73,7 +73,9 @@ class ProjectController extends Controller
         //
         $data = Project::where('ProjectID', $id)
         ->join('currency','projects.CurrencyType','=','currency.id')
-        ->select('projects.*', 'currency.CurrencyName')
+        ->join('bussinesspartner','projects.ProjectOwner','=','bussinesspartner.id')
+        ->join('personil','bussinesspartner.id','=','personil.BussinessPartnerID')
+        ->select('projects.*', 'currency.CurrencyName','bussinesspartner.BussinessName','personil.PersonilName' )
         ->get();
         return response($data);
     }
