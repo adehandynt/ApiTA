@@ -12,7 +12,7 @@ class PerformanceAnalysisController extends Controller
     public function index()
     {
         //
-        return ActualWbs::all();
+        return PerformanceAnalysis::all();
     }
 
     /**
@@ -39,7 +39,7 @@ class PerformanceAnalysisController extends Controller
             'docID' => $request->docID
         ]);
 
-            return response()->json(['status' => 'success'], 200);
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -53,20 +53,42 @@ class PerformanceAnalysisController extends Controller
         //
     }
 
+    public function getPerformanceList($projectId,$contractorId){
+        return DB::select('SELECT * From documents a 
+        where a.ProjectID="'.$projectId.'" and a.contractorID="'.$contractorId.'"
+        and documentType="performanceReport"');
+    }
+
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\Currency  $currency
      * @return \Illuminate\Http\Response
      */
-    public function show(ActualWbs $ActualWbs, $id)
+    public function show(PerformanceAnalysis $PerformanceAnalysis, $id)
     {
         //
-        $data = ActualWbs::where('id', $id)->get();
+        $data = PerformanceAnalysis::where('id', $id)->get();
         return response($data);
     }
+    public function getPerformanceDetail($docID){
+        return  DB::select("SELECT
+        a.documentName,
+        a.reportingDate,
+        b.*,
+        c.itemName ,
+        d.Userfullname
+    FROM
+    documents a
+        JOIN performance_report b on b.docID = a.id
+        JOIN actual_wbs c ON c.id = b.itemID 
+        join user d on d.id = a.author
+    WHERE
+        b.docID ='".$docID."'");
+    }
 
-    public function getPerformance($projectId,$contractorId){
+    public function getPerformance($projectId, $contractorId)
+    {
         return  DB::select("SELECT
         a.*,
         b.*,
@@ -112,10 +134,10 @@ class PerformanceAnalysisController extends Controller
             FROM
                 actual_wbs a
                 JOIN progress_evaluation b ON b.ItemID = a.id 
-								INNER JOIN ( SELECT docID FROM progress_evaluation WHERE ProjectID = ".$projectId." AND contractorID = ".$contractorId." ORDER BY docID DESC LIMIT 1 ) c ON c.docID = b.docID
+								INNER JOIN ( SELECT docID FROM progress_evaluation WHERE ProjectID = " . $projectId . " AND contractorID = " . $contractorId . " ORDER BY docID DESC LIMIT 1 ) c ON c.docID = b.docID
             WHERE
                 a.parentItem IS NOT NULL 
-                AND ( a.ProjectID = ".$projectId." AND a.contractorID = ".$contractorId." ) 
+                AND ( a.ProjectID = " . $projectId . " AND a.contractorID = " . $contractorId . " ) 
             GROUP BY
                 a.parentItem 
             ) b ON b.parentItem = a.id
@@ -128,7 +150,7 @@ class PerformanceAnalysisController extends Controller
             FROM
                 actual_wbs a
                 LEFT JOIN progress_evaluation b ON b.ItemID = a.id 
--- 								INNER JOIN ( SELECT docID FROM progress_evaluation WHERE ProjectID = ".$projectId." AND contractorID = ".$contractorId." ORDER BY docID DESC LIMIT 1 ) c ON c.docID = b.docID
+-- 								INNER JOIN ( SELECT docID FROM progress_evaluation WHERE ProjectID = " . $projectId . " AND contractorID = " . $contractorId . " ORDER BY docID DESC LIMIT 1 ) c ON c.docID = b.docID
                 -- 		AND a.weight = b.weight 
             WHERE
                 a.parentItem IS NOT NULL 
@@ -146,15 +168,15 @@ class PerformanceAnalysisController extends Controller
             baseline_wbs 
         WHERE
             parentItem IS NOT NULL 
-            AND ( ProjectID = ".$projectId." AND contractorID = ".$contractorId." ) 
+            AND ( ProjectID = " . $projectId . " AND contractorID = " . $contractorId . " ) 
         GROUP BY
             parentItem 
         ) b ON b.parentItem = a.id 
     WHERE
         ( a.hasChild != '' OR a.hasChild != 0 ) 
         AND (
-            a.ProjectID = ".$projectId." 
-        AND a.contractorID = ".$contractorId." 
+            a.ProjectID = " . $projectId . " 
+        AND a.contractorID = " . $contractorId . " 
         )");
     }
 
@@ -179,7 +201,7 @@ class PerformanceAnalysisController extends Controller
     public function update(Request $request, $id)
     {
         //
-        ActualWbs::where ('id',$id)->update($request->all());
+        ActualWbs::where('id', $id)->update($request->all());
         return response()->json(['status' => 'success'], 200);
     }
 
@@ -192,7 +214,7 @@ class PerformanceAnalysisController extends Controller
     public function destroy($id)
     {
         //
-        ActualWbs::where('id',$id)->delete();
+        ActualWbs::where('id', $id)->delete();
         return response()->json(['status' => 'success'], 200);
     }
 }

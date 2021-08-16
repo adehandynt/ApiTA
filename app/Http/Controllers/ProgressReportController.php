@@ -75,12 +75,18 @@ class ProgressReportController extends Controller
         AND b.contractorID ="' . $request->contractorID . '"');
     }
 
-    public function getIssue(Request $request){
-        return DB::select('SELECT * from issue_management where ProjectID="'.$request->projectID.'" AND contractorID="'.$request->contractorID.'"');
+    public function getIssue($projectID){
+        return DB::select('SELECT * ,
+        round(((select count(id) from issue_management where ProjectID="'.$projectID.'" and priority="high")/(select count(id) from issue_management where ProjectID="'.$projectID.'"))* 100) as high,
+        round(((select count(id) from issue_management where ProjectID="'.$projectID.'" and priority="medium")/(select count(id) from issue_management where ProjectID="'.$projectID.'")) * 100) as medium,
+        round(((select count(id) from issue_management where ProjectID="'.$projectID.'" and priority="low")/(select count(id) from issue_management where ProjectID="'.$projectID.'"))* 100) as low    
+        from issue_management where ProjectID="'.$projectID.'"');
     }
 
     public function riskReport($projectID ,$contractorID){
-        return DB::select('SELECT a.* , round((select count(a.id) from risk_management a
+        return DB::select('SELECT a.* , 
+        
+        round((select count(a.id) from risk_management a
         join personil b on b.id = a.PersonilID
         join bussinesspartner c on c.id = b.BussinessPartnerID
         join project_numbers d on d.BusinessPartnerID=c.id
@@ -91,6 +97,7 @@ class ProgressReportController extends Controller
         join project_numbers d on d.BusinessPartnerID=c.id
         where d.ProjectID="'.$projectID.'" 
         AND d.BusinessPartnerID="'.$contractorID.'") * 100) as high,
+
         round((select count(a.id) from risk_management a
         join personil b on b.id = a.PersonilID
         join bussinesspartner c on c.id = b.BussinessPartnerID
@@ -102,6 +109,7 @@ class ProgressReportController extends Controller
         join project_numbers d on d.BusinessPartnerID=c.id
         where d.ProjectID="'.$projectID.'" 
         AND d.BusinessPartnerID="'.$contractorID.'") * 100) as medium,
+        
         round((select count(a.id) from risk_management a
         join personil b on b.id = a.PersonilID
         join bussinesspartner c on c.id = b.BussinessPartnerID

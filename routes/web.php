@@ -244,6 +244,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->delete('/DeleteImage/{id}', ['uses' => 'VisualProgressImageController@destroy']);
     $router->delete('/DeleteVisual/{id}', ['uses' => 'VisualProgressController@destroy']);
     $router->get('/getPerformance/{projectId}/{contractorId}', ['uses' => 'PerformanceAnalysisController@getPerformance']);
+    $router->get('/getPerformanceDetail/{docID}', ['uses' => 'PerformanceAnalysisController@getPerformanceDetail']);
+    $router->get('/getPerformanceList/{projectId}/{contractorId}', ['uses' => 'PerformanceAnalysisController@getPerformanceList']);
     $router->post('/InsertPerformance', ['uses' => 'PerformanceAnalysisController@create']);
 
 
@@ -308,6 +310,17 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/detailProject/{projectID}/{contractorID}', 'ProgressReportController@getProject');
     $router->post('/getScheduledProgress','ProgressReportController@getScheduledProgress');
     $router->post('/getActualProgress','ProgressReportController@getActualProgress');
-    $router->post('/getIssue','ProgressReportController@getIssue');
+    $router->get('/getIssue/{projectID}','ProgressReportController@getIssue');
     $router->get('/riskReport/{projectID}/{contractorID}','ProgressReportController@riskReport');
+
+    $router->get('/paymentItemList/{id}', 'PaymentCertificateController@show');
+    $router->get('/getPaymentListDetail/{id}', 'PaymentCertificateController@getPaymentListDetail');
+    $router->get('/getCertificateTitle/{id}', 'PaymentCertificateController@getCertificateTitle');
+    $router->get('/getItemNonVat/{id}', 'PaymentDeductionItemController@ItemNonVat');
+    $router->get('/getItemVat/{id}', 'PaymentDeductionItemController@ItemVat');
+    $router->get('/getList/{id}', 'PaymentCertificateController@getList');
+    $router->post('/createCertificate', 'PaymentCertificateController@create');
+    $router->post('/createDeduction', 'PaymentDeductionItemController@create');
+    $router->delete('/deleteDeduction/{id}', 'PaymentDeductionItemController@destroy');
+    
 });
