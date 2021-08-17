@@ -92,15 +92,39 @@ class PerformanceAnalysisController extends Controller
         return  DB::select("SELECT
         a.*,
         b.*,
-
-				(a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) AS EV,
-				round(( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) / b.ACC_TOTAL_PLANNED_COST ),2) AS SPI,
-				round(( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) - b.ACC_TOTAL_PLANNED_COST ),2) AS SV,
-				(a.TOTAL_ACTUAL_COST +(b.ACC_TOTAL_PLANNED_COST - (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST))) AS EAC1,
-				COALESCE ( round(( a.TOTAL_ACTUAL_COST +(( b.ACC_TOTAL_PLANNED_COST - (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) )/ ( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) / a.TOTAL_ACTUAL_COST ) )), 2 ), 0 ) AS EAC3,
-				COALESCE ( round(( a.TOTAL_ACTUAL_COST +(( b.ACC_TOTAL_PLANNED_COST - (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) )/ ( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) / a.TOTAL_ACTUAL_COST ) /( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) / b.ACC_TOTAL_PLANNED_COST ))), 2 ), 0 ) AS EAC4,
-				( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) - a.TOTAL_ACTUAL_COST ) AS CV,
-				( (a.EARN_PERCENT * b.ACC_TOTAL_PLANNED_COST) / a.TOTAL_ACTUAL_COST ) AS CPI
+        COALESCE (round(( ((( a.id_per_parent_completed / a.all_station ))* b.ACC_TOTAL_PLANNED_COST ) / b.ACC_TOTAL_PLANNED_COST ), 2 ),0) AS SPI,
+        COALESCE (round(( ((( a.id_per_parent_completed / a.all_station ))* b.ACC_TOTAL_PLANNED_COST ) - b.ACC_TOTAL_PLANNED_COST ), 2 ),0) AS SV,
+        ( SELECT sum( qty * price ) AS ACC_TOTAL_PLANNED_COST FROM actual_wbs WHERE parentItem IS NOT NULL AND ( ProjectID = " . $projectId . " AND contractorID = " . $contractorId . " ) ) AS BAC,
+        COALESCE ((
+            a.TOTAL_ACTUAL_COST +(
+                b.ACC_TOTAL_PLANNED_COST - ((( a.id_per_parent_completed / a.all_station ))* b.ACC_TOTAL_PLANNED_COST ) 
+            )),0) AS EAC1,
+        COALESCE (
+            round((
+                    a.TOTAL_ACTUAL_COST +((
+                            b.ACC_TOTAL_PLANNED_COST - ((( a.id_per_parent_completed / a.all_station ))* b.ACC_TOTAL_PLANNED_COST ) 
+                        )/ (((( a.id_per_parent_completed / a.all_station ))* b.ACC_TOTAL_PLANNED_COST )/ a.TOTAL_ACTUAL_COST ))),
+                2 
+            ),
+            0 
+        ) AS EAC3,
+        COALESCE (
+            round((
+                    a.TOTAL_ACTUAL_COST +((
+                            b.ACC_TOTAL_PLANNED_COST - ((( a.id_per_parent_completed / a.all_station ))* b.ACC_TOTAL_PLANNED_COST ) 
+                            )/ a.aCPI /(
+                            ((( a.id_per_parent_completed / a.all_station ))* b.ACC_TOTAL_PLANNED_COST ) / b.ACC_TOTAL_PLANNED_COST 
+                        ))),
+                2 
+            ),
+            0 
+        ) AS EAC4,
+        COALESCE ((((( a.id_per_parent_completed / a.all_station ))* b.ACC_TOTAL_PLANNED_COST )/ a.TOTAL_ACTUAL_COST ),0) AS CPI,
+        COALESCE ((((( a.id_per_parent_completed / a.all_station ))* b.ACC_TOTAL_PLANNED_COST )- a.TOTAL_ACTUAL_COST ),0) AS CV,
+        COALESCE (((( a.id_per_parent_completed / a.all_station ))* b.ACC_TOTAL_PLANNED_COST ),0) AS EV,
+        (((
+                    a.id_per_parent_completed / a.all_station 
+                ))) AS EARNED 
     FROM
         (
         SELECT
@@ -117,10 +141,11 @@ class PerformanceAnalysisController extends Controller
             b.accumulatedThisMonthQty,
             b.TOTAL_ACTUAL_COST,
             b.thisMonthQty,
-            c.EARN_PERCENT
--- 						,
---             ( c.EARN_PERCENT - b.TOTAL_ACTUAL_COST ) AS CV,
---             ( c.EARN_PERCENT / b.TOTAL_ACTUAL_COST ) AS CPI 
+            c.aEV,
+            ( c.aEV - b.TOTAL_ACTUAL_COST ) AS aCV,
+            ( c.aEV / b.TOTAL_ACTUAL_COST ) AS aCPI,
+            c.id_per_parent_completed,
+            c.all_station 
         FROM
             actual_wbs a
             JOIN (
@@ -133,27 +158,31 @@ class PerformanceAnalysisController extends Controller
                 SUM( b.amount ) AS TOTAL_ACTUAL_COST 
             FROM
                 actual_wbs a
-                JOIN progress_evaluation b ON b.ItemID = a.id 
-								INNER JOIN ( SELECT docID FROM progress_evaluation WHERE ProjectID = " . $projectId . " AND contractorID = " . $contractorId . " ORDER BY docID DESC LIMIT 1 ) c ON c.docID = b.docID
+                JOIN progress_evaluation b ON b.ItemID = a.id
+                INNER JOIN ( SELECT docID FROM progress_evaluation WHERE ProjectID = " . $projectId . " AND contractorID = " . $contractorId . " ORDER BY docID DESC LIMIT 1 ) c ON c.docID = b.docID 
             WHERE
                 a.parentItem IS NOT NULL 
                 AND ( a.ProjectID = " . $projectId . " AND a.contractorID = " . $contractorId . " ) 
             GROUP BY
                 a.parentItem 
             ) b ON b.parentItem = a.id
-            JOIN (
+            LEFT JOIN (
             SELECT
                 a.parentItem,
---                 COALESCE ( SUM( b.amount ), 0 ) AS EV 
- 								sum(b.weight ),
-(sum(b.weight)/100) as EARN_PERCENT
+                COALESCE ( SUM( b.amount ), 0 ) AS aEV,
+                count( b.id ) AS id_per_parent_completed,
+                c.itemID,
+                e.all_station
+    -- 			,sum( e.all_station ) AS all_station 
             FROM
                 actual_wbs a
-                LEFT JOIN progress_evaluation b ON b.ItemID = a.id 
--- 								INNER JOIN ( SELECT docID FROM progress_evaluation WHERE ProjectID = " . $projectId . " AND contractorID = " . $contractorId . " ORDER BY docID DESC LIMIT 1 ) c ON c.docID = b.docID
-                -- 		AND a.weight = b.weight 
+                LEFT JOIN progress_evaluation b ON b.ItemID = a.id
+                LEFT JOIN sub_station_progress c ON c.ItemID = b.ItemID -- 		AND a.weight = b.weight
+                INNER JOIN ( SELECT docID FROM progress_evaluation WHERE ProjectID = " . $projectId . " AND contractorID = " . $contractorId . " ORDER BY docID DESC LIMIT 1 ) d ON d.docID = b.docID
+                LEFT JOIN ( SELECT count( id ) AS all_station, ItemID FROM sub_station_progress GROUP BY parentID ) e ON e.ItemID = b.ItemID 
             WHERE
                 a.parentItem IS NOT NULL 
+                AND c.completedStatus = 1 
             GROUP BY
                 a.parentItem 
             ) c ON c.parentItem = a.id 
@@ -163,7 +192,9 @@ class PerformanceAnalysisController extends Controller
             parentItem,-- 		sum( qty ) AS accTotalQty,
     -- 		sum( price ) AS accTotalPrice,
             sum( qty ) AS ESTIMATED_QTY,
-            sum( qty * price ) AS ACC_TOTAL_PLANNED_COST 
+            sum( qty * price ) AS ACC_TOTAL_PLANNED_COST,
+            sum( weight ) AS TOTAL_PLANNED_WEIGHT,
+            count( id ) AS id_per_parent_total 
         FROM
             baseline_wbs 
         WHERE

@@ -130,6 +130,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
      $router->post('/InsertDataUser', ['uses' => 'UserController@create']);
      $router->get('/DataUserByid/{id}', ['uses' => 'UserController@show']);
      $router->post('/getUser', ['uses' => 'UserController@getUser']);
+     $router->post('/getGuest', ['uses' => 'UserController@getGuest']);
      $router->post('/getUserProject', ['uses' => 'UserController@getUserProject']);
      $router->get('/DataUserPrivilegedByid/{id}', ['uses' => 'UserController@UserPrivilegedByid']);
      $router->delete('/DeleteDataUser/{id}', ['uses' => 'UserController@destroy']);
@@ -139,7 +140,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     //Project Number
     $router->get('/DataProjectNumber', ['uses' => 'ProjectNumberController@index']);
     $router->post('/InsertProjectNumber', ['uses' => 'ProjectNumberController@create']);
-    $router->get('/DataProjectnumberByid/{id}', ['uses' => 'ProjectNumberController@show']);
+    $router->get('/DataProjectnumberByid/{id}', ['uses' => 'ProjectNumberController@showConsultant']);
+    $router->get('/DataProjectnumberByidContractor/{id}', ['uses' => 'ProjectNumberController@showContractor']);
+    $router->get('/DataLastProjectnumber', ['uses' => 'ProjectNumberController@getLastProjectNumber']);
+    $router->get('/getProjectIDConsultant/{id}', ['uses' => 'ProjectNumberController@getProjectIDConsultant']);
+    $router->get('/getProjectIDConContractor/{id}', ['uses' => 'ProjectNumberController@getProjectIDConContractor']);
 
     //Contractor Equipment
     $router->get('/DataContractorEquipment/{id}', ['uses' => 'ContractorEquipmentController@index']);
@@ -308,6 +313,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/getActualProgress','ProgressReportController@getActualProgress');
     $router->get('/getIssue/{projectID}','ProgressReportController@getIssue');
     $router->get('/riskReport/{projectID}/{contractorID}','ProgressReportController@riskReport');
+    $router->get('/getProgressCurve/{projectID}/{contractorID}','ProgressReportController@getProgressCurve');
+    $router->get('/getActualTable/{projectID}/{contractorID}','ProgressReportController@getActualTable');
+    $router->get('/getBaseline/{projectID}/{contractorID}','ProgressReportController@getBaseline');
+    $router->get('/getCurrentTable/{projectID}/{contractorID}','ProgressReportController@getCurrentTable');
+    $router->get('/getTimeElapse/{projectID}/{contractorID}','ProgressReportController@getTimeElapse');
+    
 
     $router->get('/paymentItemList/{id}', 'PaymentCertificateController@show');
     $router->get('/getPaymentListDetail/{id}', 'PaymentCertificateController@getPaymentListDetail');

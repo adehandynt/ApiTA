@@ -25,7 +25,9 @@ class UserController extends Controller
             'UserMail'      => $request->UserMail,
             'UserProfile'      => $request->UserProfile,
             'PrivilegedStatus'      => $request->PrivilegedStatus,
-            'password'      => $request->password
+            'password'      => $request->password,
+            'guest'      => $request->guest,
+            'project'      => $request->project,
 
         ]);
 
@@ -53,6 +55,23 @@ class UserController extends Controller
         }
     }
 
+    public function getGuest(Request $request)
+    {
+
+        $data = DB::select("SELECT *,a.id as UserID
+    FROM
+        user a 
+    WHERE
+        a.UserLogin = '".$request->UserLogin."'
+        AND a.password = BINARY '".$request->password."' AND guest != 0 ");
+
+        if ($data) {
+            return $data;
+        } else {
+            return response()->json(['status' => 'empty'], 202);
+        }
+    }
+
     public function getUserProject(Request $request){
         
         $data = DB::select("SELECT b.*
@@ -66,7 +85,7 @@ class UserController extends Controller
         if ($data) {
             return $data;
         } else {
-            return response()->json(['status' => 'empty'], 202);
+            return response()->json(array(), 202);
         }
     }
 

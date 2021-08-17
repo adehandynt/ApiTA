@@ -21,8 +21,8 @@ class CreatePersonilsTable extends Migration
             $table->string('Postzip');
             $table->integer('CountryID');
             $table->integer('CityID');
-            $table->integer('Phone');
-            $table->integer('Hp');
+            $table->bigInteger('Phone');
+            $table->bigInteger('Hp');
             $table->string('Email');
             $table->integer('PositionID');
 

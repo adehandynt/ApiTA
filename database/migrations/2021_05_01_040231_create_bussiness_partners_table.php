@@ -20,9 +20,9 @@ class CreateBussinessPartnersTable extends Migration
             $table->string('Address');
             $table->integer('CountryID');
             $table->integer('CityID');
-            $table->integer('Phone');
-            $table->integer('Fax');
-            $table->integer('MobilePhone');
+            $table->bigInteger('Phone');
+            $table->bigInteger('Fax');
+            $table->bigInteger('MobilePhone');
             $table->string('Email');
             $table->string('Web');
 

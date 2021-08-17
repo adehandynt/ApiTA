@@ -47,38 +47,48 @@ class BaselineWbsController extends Controller
     public function getBaselineChart($projectid,$contractorid)
     {
         return  DB::select("SELECT
-        a.* 
+        a.A + COALESCE ( SUM( a.ay ), 0 ) baseline,
+        a.ColumnB x,
+        a.idx as month_num
     FROM
         (
         SELECT
-            MONTHNAME( StartDate ) AS x,
-            SUM( amount ) AS baseline,
-            MONTH ( StartDate ) AS month_num 
+            x.*,
+            y.A AS ay 
         FROM
-            baseline_wbs 
-        WHERE
-            amount IS NOT NULL 
-            AND ProjectID = '".$projectid."'
-            AND contractorID = '".$contractorid."'
-        GROUP BY
-            MONTHNAME( StartDate ) UNION
-        SELECT
-            MONTHNAME( endDate ) AS x,
-            SUM( amount ) AS baseline,
-            MONTH ( endDate ) AS month_num 
-        FROM
-            baseline_wbs 
-        WHERE
-            amount IS NOT NULL 
-            AND ProjectID = '".$projectid."'
-            AND contractorID = '".$contractorid."'
-        GROUP BY
-            MONTHNAME( endDate ) 
+            (
+            SELECT
+                SUM( amount ) A,
+                MONTHNAME( endDate ) ColumnB,
+                MONTH ( endDate ) idx 
+            FROM
+                baseline_wbs 
+            WHERE
+                parentItem IS NOT NULL 
+                AND ProjectID = '" . $projectid . "'  
+                AND contractorID = '" . $contractorid . "' 
+            GROUP BY
+                MONTH ( endDate ) 
+            ) x
+            LEFT OUTER JOIN (
+            SELECT
+                SUM( amount ) A,
+                MONTHNAME( endDate ) ColumnB,
+                MONTH ( endDate ) idx 
+            FROM
+                baseline_wbs 
+            WHERE
+                parentItem IS NOT NULL 
+                AND ProjectID = '" . $projectid . "' 
+                AND contractorID = '" . $contractorid . "' 
+            GROUP BY
+                MONTH ( endDate ) 
+            ) y ON y.idx < x.idx 
         ) a 
     GROUP BY
-        a.x 
+        a.ColumnB 
     ORDER BY
-        month_num");
+        a.idx");
     }
 
     /**

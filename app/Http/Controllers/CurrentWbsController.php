@@ -54,64 +54,102 @@ class CurrentWbsController extends Controller
     public function getCurrentWbsChart($projectid,$contractorid)
     {
         return  DB::select("SELECT
-        	a.*, b.actual
+        COALESCE(a.baseline,0) baseline, COALESCE(a.x,b.x) x, COALESCE(a.month_num,b.month_num) month_num, b.actual
+FROM
+    (
+   SELECT
+    a.A + COALESCE ( SUM( a.ay ), 0 ) baseline,
+    a.ColumnB x,
+    a.idx as month_num
+FROM
+    (
+    SELECT
+        x.*,
+        y.A AS ay 
     FROM
         (
         SELECT
-            MONTHNAME( StartDate ) AS x,
-            SUM( amount ) AS baseline,
-            MONTH ( StartDate ) AS month_num 
+            SUM( amount ) A,
+            MONTHNAME( endDate ) ColumnB,
+            MONTH ( endDate ) idx 
         FROM
             baseline_wbs 
         WHERE
-            amount IS NOT NULL 
-            AND ProjectID = '".$projectid."'
-            AND contractorID = '".$contractorid."'
+            parentItem IS NOT NULL 
+            AND ProjectID = '" . $projectid . "'  
+            AND contractorID = '" . $contractorid . "' 
         GROUP BY
-            MONTHNAME( StartDate ) UNION
+            MONTH ( endDate ) 
+        ) x
+        LEFT OUTER JOIN (
         SELECT
-            MONTHNAME( endDate ) AS x,
-            SUM( amount ) AS baseline,
-            MONTH ( endDate ) AS month_num 
+            SUM( amount ) A,
+            MONTHNAME( endDate ) ColumnB,
+            MONTH ( endDate ) idx 
         FROM
             baseline_wbs 
         WHERE
-            amount IS NOT NULL 
-            AND ProjectID = '".$projectid."'
-            AND contractorID = '".$contractorid."'
+            parentItem IS NOT NULL 
+            AND ProjectID = '" . $projectid . "' 
+            AND contractorID = '" . $contractorid . "' 
         GROUP BY
-            MONTHNAME( endDate ) 
-        ) a join 
+            MONTH ( endDate ) 
+        ) y ON y.idx < x.idx 
+    ) a 
+GROUP BY
+    a.ColumnB 
+ORDER BY
+    a.idx
+    ) a right outer join 
+    (
+        SELECT
+    a.A + COALESCE ( SUM( a.ay ), 0 ) actual,
+    a.ColumnB x,
+    a.idx as month_num
+FROM
+    (
+    SELECT
+        x.*,
+        y.A AS ay 
+    FROM
         (
-            SELECT
-                MONTHNAME( StartDate ) AS x,
-                SUM( amount ) AS actual,
-                MONTH ( StartDate ) AS month_num 
-            FROM
-                actual_wbs 
-            WHERE
-                amount IS NOT NULL 
-                AND ProjectID = '".$projectid."'
-                AND contractorID = '".$contractorid."'
-            GROUP BY
-                MONTHNAME( StartDate ) UNION
-            SELECT
-                MONTHNAME( endDate ) AS x,
-                SUM( amount ) AS actual,
-                MONTH ( endDate ) AS month_num 
-            FROM
-                actual_wbs 
-            WHERE
-                amount IS NOT NULL 
-                AND ProjectID = '".$projectid."'
-                AND contractorID = '".$contractorid."'
-            GROUP BY
-                MONTHNAME( endDate ) 
-            ) b on b.x=a.x
-    GROUP BY
-        a.x 
-    ORDER BY
-        a.month_num");
+        SELECT
+            SUM( amount ) A,
+            MONTHNAME( endDate ) ColumnB,
+            MONTH ( endDate ) idx 
+        FROM
+            actual_wbs 
+        WHERE
+            parentItem IS NOT NULL 
+            AND ProjectID = '" . $projectid . "'  
+            AND contractorID = '" . $contractorid . "' 
+        GROUP BY
+            MONTH ( endDate ) 
+        ) x
+        LEFT OUTER JOIN (
+        SELECT
+            SUM( amount ) A,
+            MONTHNAME( endDate ) ColumnB,
+            MONTH ( endDate ) idx 
+        FROM
+            actual_wbs 
+        WHERE
+            parentItem IS NOT NULL 
+            AND ProjectID = '" . $projectid . "' 
+            AND contractorID = '" . $contractorid . "' 
+        GROUP BY
+            MONTH ( endDate ) 
+        ) y ON y.idx < x.idx 
+    ) a 
+GROUP BY
+    a.ColumnB 
+ORDER BY
+    a.idx
+        ) b on b.x=a.x
+GROUP BY
+    x 
+ORDER BY
+    month_num");
     }
 
     public function create(Request $request)

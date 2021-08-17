@@ -86,9 +86,10 @@ class BussinessPartnerController extends Controller
      */
     public function DataContractor($id)
     {
-        return ProjectNumber::where('project_numbers.ProjectID', $id)
+        return ProjectNumber::where('project_numbers.ProjectID','=', $id)->where('bussiness_types.BussinessTypeName','like','%Contractor%')
         ->join('projects', 'projects.ProjectID', '=', 'project_numbers.ProjectID')
         ->join('bussinesspartner', 'bussinesspartner.id', '=', 'project_numbers.BusinessPartnerID')
+        ->join('bussiness_types', 'bussiness_types.id', '=', 'bussinesspartner.BussinessTypeID')
         ->select('bussinesspartner.*')
         ->get();
     }
