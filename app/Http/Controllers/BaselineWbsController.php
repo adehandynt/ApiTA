@@ -17,10 +17,11 @@ class BaselineWbsController extends Controller
     {
         //
         //return  DB::select('SELECT * FROM baseline_wbs ORDER BY COALESCE(parentItem, id), id');
-        return  DB::select('SELECT a.*,c.UnitName,d.currencyName
+        return  DB::select('SELECT a.*,c.UnitName,d.currencyName,e.Userfullname
          FROM baseline_wbs a
          left JOIN unit c on c.id=a.unitID
          left JOIN currency d on d.id = a.CurrencyID
+         left JOIN user e on e.id = a.Created_By
         --  where a.hasChild IS NOT NULL AND (a.hasChild != "" OR a.hasChild != 0)
         where a.ProjectID="' . $projectid . '" AND a.contractorID="' . $id . '"
         ORDER BY a.parentlevel, COALESCE(a.parentItem, a.id), a.level');

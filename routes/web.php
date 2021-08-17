@@ -194,6 +194,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('/DataActualWbsByid/{id}', ['uses' => 'ActualWbsController@show']);
     $router->get('/DataDetailActualWbsByid/{id}', ['uses' => 'ActualWbsController@DataDetailActualWbsByid']);
     $router->delete('/DeleteDataActualWbs/{id}', ['uses' => 'ActualWbsController@destroy']);
+    $router->delete('/DeleteDataActualReportWbs/{id}', ['uses' => 'ActualWbsController@DeleteDataActualReportWbs']);
     $router->post('/UpdateDataActualWbs{id}', ['uses' => 'ActualWbsController@update']);
     $router->get('/DataActualWbschild/{id}/{contractorID}/{projectID}', ['uses' => 'ActualWbsController@DataActualWbschild']);
     $router->get('/getAllDataActualWbs/{contractorID}/{projectID}', ['uses' => 'ActualWbsController@getAllDataActualWbs']);

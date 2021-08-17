@@ -251,4 +251,14 @@ GROUP BY
          )', [$id]);
         return response()->json(['status' => 'success'], 200);
     }
+
+    public function DeleteDataActualReportWbs($id)
+    {
+        //
+
+        DB::delete('DELETE
+         FROM documents
+         WHERE id = "'.$id.'"');
+        return response()->json(['status' => 'success'], 200);
+    }
 }
